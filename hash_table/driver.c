@@ -79,6 +79,16 @@ int main( int argc, char **argv )
   /* seconds = difftime( t2, t1 ); */
   /* printf("%"PRIu64"\n", y - x ); */
   /* printf("%f seconds.\n", seconds ); */
+
+  found = hash_contains( tbl, "AAIT", strlen("AAIT"), str_cmp );
+  if( found )
+    {
+      printf("found\n");
+    }
+  else
+    printf("not found\n");
+
+  hash_remove( &tbl, "AAIT", strlen("AAIT"), str_cmp );
   
   t = clock();
   found = hash_contains( tbl, "AAIT", strlen("AAIT"), str_cmp );
@@ -90,8 +100,6 @@ int main( int argc, char **argv )
     }
   else
     printf("not found\n");
-
-  
 
   hash_delete( &tbl );
   fclose( in );

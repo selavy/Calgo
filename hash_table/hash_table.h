@@ -37,7 +37,8 @@ typedef struct _hash_t
 void hash_init( hash_t ** tbl );
 void hash_delete( hash_t ** tbl );
 void hash_insert( hash_t ** tbl, void * buf, size_t buf_sz );
+hash_node_t * hash_contains_node( const hash_t * tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) );
 void * hash_contains( const hash_t * tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) );
-int hash_remove( hash_t ** tbl, const void * buf, int (*cmp)(const void*, const void*) );
+int hash_remove( hash_t ** tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) );
 
 #endif

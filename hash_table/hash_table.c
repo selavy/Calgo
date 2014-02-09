@@ -194,7 +194,7 @@ void hash_insert( hash_t ** tbl, void * buf, size_t buf_sz ) {
 
 }
 
-void * hash_contains( const hash_t * tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) ) {
+hash_node_t * hash_contains_node( const hash_t * tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) ) {
   const uint32_t loc = super_fast_hash( buf, buf_sz ) % tbl->tbl_sz;
   hash_node_t * node = tbl->tbl_p[loc];
 
@@ -202,7 +202,7 @@ void * hash_contains( const hash_t * tbl, const void * buf, size_t buf_sz, int (
     {
       if( cmp( node->data, buf ) )
 	{
-	  return (void*) node->data;
+	  return node;
 	}
       else
 	{
@@ -214,7 +214,36 @@ void * hash_contains( const hash_t * tbl, const void * buf, size_t buf_sz, int (
   return NULL;
 }
 
-int hash_remove( hash_t ** tbl, const void * val, int (*cmp)(const void*, const void*) ) {
+void * hash_contains( const hash_t * tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) ) {
+  hash_node_t * node = hash_contains_node( tbl, buf, buf_sz, cmp );
+  if( node == NULL ) return NULL;
+  else return (void*) node->data;
+}
+
+int hash_remove( hash_t ** tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) ) {
+  const uint32_t loc = super_fast_hash( buf, buf_sz ) % (*tbl)->tbl_sz;
+  hash_node_t * node = (*tbl)->tbl_p[loc];
+  
+  if( cmp( node->data, buf ) )
+    {
+      (*tbl)->tbl_p[loc] = node->next;
+      free( node->data );
+      free( node );
+      return 1;
+    }
+
+  while( node->next != NULL )
+    {
+      if( cmp( node->next->data, buf ) )
+	{
+	  hash_node_t * next = node->next->next;
+	  free( node->next->data );
+	  free( node->next );
+	  node->next = next;
+	  return 1;
+	}
+    }
+  
   return 0;
 }
 
