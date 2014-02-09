@@ -21,5 +21,4 @@
 #endif
 
 uint32_t super_fast_hash( const void * data, int len );
-
-#endif // ifndef _HASH_H_
+#endif /* ifndef _HASH_H_ */
