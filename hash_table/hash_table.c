@@ -1,6 +1,10 @@
 #include "hash_table.h"
 
 /* First hash table implementation using separate chaining with buckets of linked lists */
+static void hash_init_helper( hash_t ** tbl, size_t size );
+static void hash_shallow_delete( hash_t ** tbl );
+static hash_node_t * hash_node_insert( hash_node_t ** node, char * key, void * buf );
+static size_t hash_next_size( size_t curr );
 
 static void hash_init_helper( hash_t ** tbl, size_t size ) {
   int i;
@@ -46,6 +50,7 @@ void hash_delete( hash_t ** tbl ) {
 	{
 	  next = curr->next;
 	  free( curr->data );
+	  free( curr->key );
 	  free( curr );
 	  curr = next;
 	}
@@ -72,11 +77,11 @@ static void hash_shallow_delete( hash_t ** tbl )
       while( curr != NULL )
 	{
 	  next = curr->next;
+	  free( curr->key );
 	  /* don't: delete( curr->data );                     */
 	  /* i.e. don't delete the data contained in the node */
 	  /* because it is still being used by another        */
 	  /* table.                                           */
-
 	  free( curr );
 	  curr = next;
 	}
@@ -88,7 +93,7 @@ static void hash_shallow_delete( hash_t ** tbl )
   *tbl = NULL;
 }
 
-static hash_node_t * hash_node_insert( hash_node_t ** node, void * buf, size_t buf_sz ) {
+static hash_node_t * hash_node_insert( hash_node_t ** node, char * key, void * buf ) {
   hash_node_t * n;
   if( *node == NULL )
     {
@@ -96,7 +101,7 @@ static hash_node_t * hash_node_insert( hash_node_t ** node, void * buf, size_t b
       if( *node == NULL ) return NULL;
       
       (*node)->data = buf;
-      (*node)->data_sz = buf_sz;
+      (*node)->key = savestring(key);
       (*node)->next = NULL;
       return (*node);
     }
@@ -111,7 +116,7 @@ static hash_node_t * hash_node_insert( hash_node_t ** node, void * buf, size_t b
 
       n = n->next;
       n->data = buf;
-      n->data_sz = buf_sz;
+      n->key = savestring(key);
       n->next = NULL;
       return n;
     }
@@ -145,15 +150,15 @@ static size_t hash_next_size( size_t curr ) {
   }
 }
 
-void hash_insert( hash_t ** tbl, void * buf, size_t buf_sz ) {
-  const uint32_t loc = super_fast_hash( buf, buf_sz ) % (*tbl)->tbl_sz;
+void hash_insert( hash_t ** tbl, char * key, void * buf ) {
+  const uint32_t loc = super_fast_hash( key, strlen( key ) ) % (*tbl)->tbl_sz;
   double load;
 
   /*printf("loc = %"PRIx32"\n", loc); */
   /* init table if it hasn't been yet */
   if( *tbl == NULL ) hash_init( tbl );
 
-  if( hash_node_insert( &(*tbl)->tbl_p[loc], buf, buf_sz ) == NULL )
+  if( hash_node_insert( &(*tbl)->tbl_p[loc], key, buf ) == NULL )
     return; /* failed to insert */
   /* else */
   (*tbl)->count++;
@@ -180,7 +185,7 @@ void hash_insert( hash_t ** tbl, void * buf, size_t buf_sz ) {
 	      hash_node_t * node = ((*tbl)->tbl_p)[i];
 	      while( node != NULL )
 		{
-		  hash_insert( &new_tbl, node->data, node->data_sz );
+		  hash_insert( &new_tbl, node->key, node->data );
 		  node = node->next;
 		}
 	    }
@@ -194,13 +199,13 @@ void hash_insert( hash_t ** tbl, void * buf, size_t buf_sz ) {
 
 }
 
-hash_node_t * hash_contains_node( const hash_t * tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) ) {
-  const uint32_t loc = super_fast_hash( buf, buf_sz ) % tbl->tbl_sz;
+hash_node_t * hash_get_node( const hash_t * tbl, const char * key ) {
+  const uint32_t loc = super_fast_hash( key, strlen( key ) ) % tbl->tbl_sz;
   hash_node_t * node = tbl->tbl_p[loc];
 
   while( node != NULL )
     {
-      if( cmp( node->data, buf ) )
+      if( strcmp( node->key, key ) == 0 )
 	{
 	  return node;
 	}
@@ -214,19 +219,20 @@ hash_node_t * hash_contains_node( const hash_t * tbl, const void * buf, size_t b
   return NULL;
 }
 
-void * hash_contains( const hash_t * tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) ) {
-  hash_node_t * node = hash_contains_node( tbl, buf, buf_sz, cmp );
+void * hash_contains( const hash_t * tbl, const char * key ) {
+  hash_node_t * node = hash_get_node( tbl, key );
   if( node == NULL ) return NULL;
   else return (void*) node->data;
 }
 
-int hash_remove( hash_t ** tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) ) {
-  const uint32_t loc = super_fast_hash( buf, buf_sz ) % (*tbl)->tbl_sz;
+int hash_remove( hash_t ** tbl, const char * key ) {
+  const uint32_t loc = super_fast_hash( key, strlen(key) ) % (*tbl)->tbl_sz;
   hash_node_t * node = (*tbl)->tbl_p[loc];
   
-  if( cmp( node->data, buf ) )
+  if( strcmp( node->key, key ) == 0 )
     {
       (*tbl)->tbl_p[loc] = node->next;
+      free( node->key );
       free( node->data );
       free( node );
       return 1;
@@ -234,9 +240,10 @@ int hash_remove( hash_t ** tbl, const void * buf, size_t buf_sz, int (*cmp)(cons
 
   while( node->next != NULL )
     {
-      if( cmp( node->next->data, buf ) )
+      if( strcmp( node->next->key, key ) == 0 )
 	{
 	  hash_node_t * next = node->next->next;
+	  free( node->next->key );
 	  free( node->next->data );
 	  free( node->next );
 	  node->next = next;
