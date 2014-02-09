@@ -194,7 +194,23 @@ void hash_insert( hash_t ** tbl, void * buf, size_t buf_sz ) {
 
 }
 
-void * hash_contains( const hash_t * tbl, const void * val, int (*cmp)(const void*, const void*) ) {
+void * hash_contains( const hash_t * tbl, const void * buf, size_t buf_sz, int (*cmp)(const void*, const void*) ) {
+  const uint32_t loc = super_fast_hash( buf, buf_sz ) % tbl->tbl_sz;
+  hash_node_t * node = tbl->tbl_p[loc];
+
+  while( node != NULL )
+    {
+      if( cmp( node->data, buf ) )
+	{
+	  return (void*) node->data;
+	}
+      else
+	{
+	  node = node->next;
+	}
+    }
+  
+  /* did not find the value so return NULL */
   return NULL;
 }
 
