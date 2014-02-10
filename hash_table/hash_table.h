@@ -100,8 +100,8 @@ void * hash_contains( const hash_t * tbl, const char * key );
  * preconditions:  +tbl is NOT NULL
  *                 +key is valid c-string
  * postconditions: +node hashed by key is removed from table and freed
- * returns:        +1 if successfully removed
- *                 +0 if key not in table
+ * returns:        +TRUE if successfully removed
+ *                 +FALSE if key not in table
  * notes:
  */
 int hash_remove( hash_t ** tbl, const char * key );

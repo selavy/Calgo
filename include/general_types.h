@@ -2,6 +2,7 @@
 #define _GENERAL_TYPES_H_
 
 #include <string.h>
+#include <stdlib.h>
 #include <time.h>
 
 /**
@@ -19,9 +20,8 @@
 typedef double capital;
 typedef long shares;
 
-#ifndef NULL
-#define NULL 0
-#endif
+#define TRUE 1
+#define FALSE 0
 
 typedef struct
 {

@@ -235,7 +235,7 @@ int hash_remove( hash_t ** tbl, const char * key ) {
       free( node->key );
       free( node->data );
       free( node );
-      return 1;
+      return TRUE;
     }
 
   while( node->next != NULL )
@@ -247,10 +247,10 @@ int hash_remove( hash_t ** tbl, const char * key ) {
 	  free( node->next->data );
 	  free( node->next );
 	  node->next = next;
-	  return 1;
+	  return TRUE;
 	}
     }
   
-  return 0;
+  return FALSE;
 }
 

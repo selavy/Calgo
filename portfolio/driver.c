@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
   portfolio_t * portfolio; 
   hash_node_t * node;
   char * str;
-  portfolio = portfolio_new( time(NULL) );
+  portfolio = portfolio_create( time(NULL) );
   portfolio->starting_cash = 1000;
   str = savestring("AIIT");
   hash_insert( &(portfolio->positions), "AIIT", str );
