@@ -2,6 +2,7 @@
 #define _GENERAL_TYPES_H_
 
 #include <string.h>
+#include <time.h>
 
 /**
  * macro: savestring()
@@ -13,9 +14,7 @@
  * returns:        +pointer to new memory where x was copied
  * notes: does not handle malloc failing to allocate memory
  */
-#ifndef savestring /* eventually clean this up */
-#define savestring(x) (strcpy( malloc( strlen(x) + 1 ), (x) ))
-#endif
+#define savestring(x) (strcpy( malloc(strlen(x) + 1), (x) ))
 
 typedef double capital;
 typedef long shares;
@@ -23,5 +22,28 @@ typedef long shares;
 #ifndef NULL
 #define NULL 0
 #endif
+
+typedef struct
+{
+  char * symbol;
+  shares num_of_shares;
+  capital cost_basis;
+} position_t;
+
+typedef struct
+{
+  /* int id; */
+  char * symbol;
+  char * full_name;
+  time_t start_date;
+  time_t end_date;
+} security_t;
+
+typedef struct
+{
+  security_t * security;
+  shares amount;
+} order_t;
+
 
 #endif
