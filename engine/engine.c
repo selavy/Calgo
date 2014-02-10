@@ -2,7 +2,8 @@
 
 static void engine_order_helper( date date, const char * symbol, shares amount );
 static void engine_check_order_queue();
-static void engine_execute_order( order_t * order );
+static filled_order_t * engine_execute_order( order_t * order );
+static void engine_print_order( const void * const filled_order );
 
 typedef struct {
   strategy_fn strategy;
@@ -87,6 +88,7 @@ void engine_run( FILE * out ) {
     }
 
   fprintf( engine->out_stream, "Finished.\n" );
+  queue_traverse( engine->filled_order_queue, engine_print_order );
   fprintf( engine->out_stream, "capital used: %f\ncash available: %f\npositions value: %f\nstarting cash: %f\n",
 	   engine->portfolio->capital_used,
 	   engine->portfolio->cash_available,
@@ -122,12 +124,13 @@ static void engine_order_helper( date date, const char * symbol, shares amount )
 
 static void engine_check_order_queue() {
   order_t * order;
+  filled_order_t * filled_order;
 
   while( engine->order_queue->size ) {
     shares volume, amount_to_purchase, left_over;
+    const order_t * const peek = queue_peek( engine->order_queue );
     
-    order = queue_peek( engine->order_queue );
-    if( order->datestamp > engine->curr_date )
+    if( peek->datestamp > engine->curr_date )
       break; /* have done all the orders for the day */
 
     /* we have an order to process, so remove it from the queue */
@@ -136,6 +139,7 @@ static void engine_check_order_queue() {
       {
 	free( order->symbol );
 	free( order );
+	order = NULL;
 	continue;
       }
 
@@ -147,17 +151,27 @@ static void engine_check_order_queue() {
 	order_t * new_order = malloc( sizeof( *new_order ) );
 	strcpy( new_order->symbol, order->symbol );
 	new_order->amount = left_over;
+	/* schedule the new order for the next day when more volume available */
 	new_order->datestamp = order->datestamp + engine->granularity;
+
 	queue_enqueue( engine->order_queue, new_order );
       }
 
     /* execute order */
-    engine_execute_order( order );
-    /* queue_enqueue( engine->filled_order_queue, order ); */
+    filled_order = engine_execute_order( order );
+
+    free( order );
+    if( filled_order != NULL )
+      queue_enqueue( engine->filled_order_queue, filled_order );
   }
 }
 
-static void engine_execute_order( order_t * order ) {
+static void engine_print_order( const void * const filled_order ) {
+  const filled_order_t * const o = (filled_order_t*) filled_order;
+  printf("%li shares of %s at $%.4f per share at %d\n", (long) o->amount, o->symbol, (double) o->price_per_share, (int) o->datestamp );
+}
+
+static filled_order_t * engine_execute_order( order_t * order ) {
   const shares amount = order->amount;
   const capital slippage = (engine->slippage)( order, NULL );
   const capital commission = (engine->slippage)( order, NULL );
@@ -165,6 +179,7 @@ static void engine_execute_order( order_t * order ) {
   const capital total_spent = price * amount;
   hash_node_t * stock;
   position_t * position;
+  filled_order_t * filled_order;
   
   /* check if we already have this stock */
   stock = hash_get_node( engine->portfolio->positions, order->symbol );
@@ -190,7 +205,16 @@ static void engine_execute_order( order_t * order ) {
   if( position->num_of_shares == 0 )
     {
       hash_remove( &(engine->portfolio->positions), order->symbol );
+      return NULL;
     }
+
+    filled_order = malloc( sizeof( *filled_order ) );
+    if( filled_order == NULL ) return NULL;
+    filled_order->datestamp = order->datestamp;
+    filled_order->symbol = order->symbol;
+    filled_order->price_per_share = price;
+    filled_order->amount = order->amount;
+    return filled_order;
 }
 
 

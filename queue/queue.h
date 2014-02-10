@@ -3,6 +3,10 @@
 
 #include "general_types.h"
 
+#ifdef _DEBUG_
+#include <stdio.h>
+#endif /* _DEBUG_ */
+
 typedef struct _queue_node_t
 {
   void * data;
@@ -72,6 +76,20 @@ void * queue_dequeue( queue_t * queue );
  * returns:        +pointer to data in node at front of list
  * notes:
  */
-void * queue_peek( const queue_t * queue );
+void * queue_peek( const queue_t * const queue );
 
-#endif
+#ifdef _DEBUG_
+/**
+ * function: queue_print_pointers()
+ * parameters:     +queue: the queue_t structure to be printed
+ * preconditions: 
+ * postconditions: +contents of queue is printed to stdout
+ * returns:
+ * notes:
+ */
+void queue_print_pointers( const queue_t * const queue );
+#endif /* _DEBUG_ */
+
+void queue_traverse( const queue_t * const queue, void (*fn)(const void * const) );
+
+#endif /* ifndef _QUEUE_H_ */

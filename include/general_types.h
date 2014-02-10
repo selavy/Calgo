@@ -50,6 +50,14 @@ typedef struct
 typedef struct
 {
   date datestamp;
+  char * symbol;
+  shares amount;
+  capital price_per_share;
+} filled_order_t;
+
+typedef struct
+{
+  date datestamp;
   capital capital_used;
   capital realized_gains;
   capital unreaslized_gains;
