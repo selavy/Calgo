@@ -17,11 +17,12 @@
  */
 #define savestring(x) (strcpy( malloc(strlen(x) + 1), (x) ))
 
-typedef double capital;
-typedef long shares;
-
 #define TRUE 1
 #define FALSE 0
+
+typedef double capital;
+typedef long shares;
+typedef time_t date;
 
 typedef struct
 {
@@ -35,15 +36,24 @@ typedef struct
   /* int id; */
   char * symbol;
   char * full_name;
-  time_t start_date;
-  time_t end_date;
+  date start_date;
+  date end_date;
 } security_t;
 
 typedef struct
 {
+  date datestamp;
   security_t * security;
   shares amount;
 } order_t;
 
-
+typedef struct
+{
+  date datestamp;
+  capital capital_used;
+  capital realized_gains;
+  capital unreaslized_gains;
+  capital profit_n_loss;
+  capital positions_value;
+} bar_evnt_t;
 #endif
