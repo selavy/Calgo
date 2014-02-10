@@ -42,7 +42,7 @@ void hash_init( hash_t ** tbl );
 /**
  * function: hash_delete()
  * parameters:     +tbl: a pointer to the hash_t structure to be freed
- * preconditions:  +tbl is heap-allocated hash_t structure or NULL
+ * preconditions:  +tbl is heap-allocated hash_t structure
  * postconditions: +tbl is NULL
  * returns:
  * notes: must be called to clean up heap allocated memory

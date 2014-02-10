@@ -11,7 +11,7 @@ typedef struct
   capital cash_available;
   capital positions_value;
   capital starting_cash;
-  time_t start_date;
+  date start_date;
   hash_t * positions;
 } portfolio_t;
 
@@ -25,7 +25,7 @@ typedef struct
  * returns:        +a pointer to the newly created portfolio_t struct
  * notes:          should pair call to this with portfolio_delete()
  */
-portfolio_t * portfolio_create( time_t start_date );
+portfolio_t * portfolio_create( date start_date );
 
 /**
  * function: portfolio_delete()

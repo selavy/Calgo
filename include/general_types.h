@@ -43,7 +43,7 @@ typedef struct
 typedef struct
 {
   date datestamp;
-  security_t * security;
+  char * symbol;
   shares amount;
 } order_t;
 
