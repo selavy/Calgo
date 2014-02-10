@@ -36,11 +36,11 @@ void hash_init( hash_t ** tbl )
 }
 
 void hash_delete( hash_t ** tbl ) {
+  if( *tbl == NULL ) return;
+
   int i;
   const size_t len = (*tbl)->tbl_sz;
   hash_node_t *curr, *next;
-
-  if( *tbl == NULL ) return;
 
   for( i = 0; i < len; ++i )
     {
