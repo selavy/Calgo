@@ -15,6 +15,25 @@ typedef struct
   hash_t * positions;
 } portfolio_t;
 
-void portfolio_init( portfolio_t * portfolio, time_t start_date );
+/**
+ * function: portfolio_new()
+ * preconditions:  none
+ * postconditions: +heap memory is allocated for a portfolio_t struct
+ *                 +portfolio settings are set to 0
+ *                 +positions hash table is initialized
+ * parameters:     none
+ * notes:          should pair call to this with portfolio_delete()
+ */
+portfolio_t * portfolio_new( time_t start_date );
+
+/**
+ * function: portfolio_delete()
+ * preconditions:  +either portfolio is NULL or points to a heap allocated portfolio_t struct
+ *                 +portfolio->positions should either be NULL or point to a heap allocated hash_t struct
+ * postconditions: +heap memory is deallocated
+ *                 +(*portfolio) is set to NULL
+ * notes:
+ */
+void portfolio_delete( portfolio_t ** portfolio );
 
 #endif
