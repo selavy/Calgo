@@ -35,13 +35,14 @@ queue_t * queue_create();
 /**
  * function: queue_delete()
  * parameters:     +queue: queue_t structure to be deleted
+ *                 +delete_fn: function to free any other heap memory stored in data
  * preconditions:  +queue is NULL or heap allocated struct
  * postconditions: +queue is freed
  *                 +queue = NULL
  * returns:
- * notes:
+ * notes: if free( node->data ) is enough to not leak memory then just pass NULL for delete_fn
  */
-void queue_delete( queue_t ** queue );
+void queue_delete( queue_t ** queue, void (*delete_fn)(void *) );
 
 /**
  * function: queue_enqueue()
@@ -90,6 +91,15 @@ void * queue_peek( const queue_t * const queue );
 void queue_print_pointers( const queue_t * const queue );
 #endif /* _DEBUG_ */
 
+/**
+ * function: queue_traverse()
+ * parameters:     +queue: the queue_t structure to be traversed
+ *                 +fn: the function to be applied to each node in queue
+ * preconditions:  +queue is NOT NULL
+ * postconditions:
+ * returns:
+ * notes:
+ */
 void queue_traverse( const queue_t * const queue, void (*fn)(const void * const) );
 
 #endif /* ifndef _QUEUE_H_ */

@@ -31,7 +31,7 @@ int main(int argc, char ** argv)
 }
 
 void strategy( const date * curr_date, const portfolio_t * portfolio, void * args ) {
-  order( "AAA", 1 );
+  order( "AAA", 1000 );
 }
 
 capital commission( const order_t * order, void * args ) {
@@ -43,6 +43,7 @@ capital slippage( const order_t * order, void * args ) {
   const capital order_amount = order->amount * database_get_price( order->symbol, &(order->datestamp) );
   const capital div = order_amount / current_volume;
   const double impact = .05;
-  return (div * div * impact);
+  const double slippage_val = (div * div * impact);
+  return (order->amount > 0) ? slippage_val : -1 * slippage_val;
 }
 

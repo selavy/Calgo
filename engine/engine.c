@@ -79,9 +79,12 @@ void engine_run( FILE * out ) {
   engine->curr_date = engine->start_date;
   while( engine->curr_date < engine->end_date )
     {
-      engine->strategy( &(engine->curr_date), engine->portfolio, NULL );
+      if( engine->strategy )
+	engine->strategy( &(engine->curr_date), engine->portfolio, NULL );
 
       engine_check_order_queue();
+
+      /* TODO : add to bar queue */
 
       /* increment by granuarlity */
       engine->curr_date += engine->granularity;
@@ -96,10 +99,21 @@ void engine_run( FILE * out ) {
 	   engine->portfolio->starting_cash );
 }
 
+static void engine_helper_delete_order_string( void * buf ) {
+  order_t * order = (order_t*) buf;
+  free( order->symbol );
+}
+
+static void engine_helper_delete_filled_order_string( void * buf ) {
+  filled_order_t * order = (filled_order_t*) buf;
+  free( order->symbol );
+}
+
 void engine_cleanup() {
-  queue_delete( &(engine->order_queue) );
-  queue_delete( &(engine->filled_order_queue) );
-  queue_delete( &(engine->bar_queue) );
+  /* clear the memory in the queues */
+  queue_delete( &(engine->order_queue), engine_helper_delete_order_string );
+  queue_delete( &(engine->filled_order_queue), engine_helper_delete_filled_order_string );
+  queue_delete( &(engine->bar_queue), NULL );
 
   portfolio_delete( &(engine->portfolio) );
   free( engine );
@@ -114,7 +128,6 @@ static void engine_order_helper( date date, const char * symbol, shares amount )
   order_t * order = malloc( sizeof(*order) );
   /* TODO: handle if not enough memory for order_t */
   
-
   order->symbol = savestring( symbol );
   order->amount = amount;
   order->datestamp = date;
@@ -159,10 +172,10 @@ static void engine_check_order_queue() {
 
     /* execute order */
     filled_order = engine_execute_order( order );
-
-    free( order );
     if( filled_order != NULL )
       queue_enqueue( engine->filled_order_queue, filled_order );
+    free( order->symbol );
+    free( order );
   }
 }
 
@@ -173,9 +186,9 @@ static void engine_print_order( const void * const filled_order ) {
 
 static filled_order_t * engine_execute_order( order_t * order ) {
   const shares amount = order->amount;
-  const capital slippage = (engine->slippage)( order, NULL );
-  const capital commission = (engine->slippage)( order, NULL );
-  const capital price = database_get_price( order->symbol, &(order->datestamp) ) * ( 1 - slippage ) - commission;
+  const capital slippage = (engine->slippage) ? (engine->slippage)( order, NULL ) : 0.0f;
+  const capital commission = (engine->commission) ? (engine->commission)( order, NULL ) : 0.0f;
+  const capital price = database_get_price( order->symbol, &(order->datestamp) ) * ( 1 + slippage ) - commission;
   const capital total_spent = price * amount;
   hash_node_t * stock;
   position_t * position;
@@ -211,7 +224,7 @@ static filled_order_t * engine_execute_order( order_t * order ) {
     filled_order = malloc( sizeof( *filled_order ) );
     if( filled_order == NULL ) return NULL;
     filled_order->datestamp = order->datestamp;
-    filled_order->symbol = order->symbol;
+    filled_order->symbol = savestring( order->symbol );
     filled_order->price_per_share = price;
     filled_order->amount = order->amount;
     return filled_order;

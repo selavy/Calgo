@@ -26,6 +26,6 @@ int main(int argc, char ** argv )
       free( a );
     }
 
-  queue_delete( &queue );
+  queue_delete( &queue, NULL );
   return 0;
 }

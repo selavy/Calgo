@@ -10,7 +10,7 @@ queue_t * queue_create() {
   return queue;
 }
 
-void queue_delete( queue_t ** queue ) {
+void queue_delete( queue_t ** queue, void (*delete_fn)(void *) ) {
   queue_node_t *node, *prev;
   if( *queue == NULL ) return;
 
@@ -18,6 +18,8 @@ void queue_delete( queue_t ** queue ) {
   while( node != NULL )
     {
       prev = node->prev;
+      if( delete_fn != NULL )
+	delete_fn( node->data );
       free( node->data );
       free( node );
       node = prev;
