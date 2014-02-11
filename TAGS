@@ -1,0 +1,450 @@
+
+queue/driver.c,35
+#define copy(7,80
+int main(9,141
+
+queue/queue.h,274
+#define _QUEUE_H_2,18
+typedef struct _queue_node_t10,121
+  void * data;12,152
+  struct _queue_node_t * prev;13,167
+} queue_node_t;14,198
+typedef struct _queue_t16,215
+  queue_node_t * front;18,241
+  queue_node_t * back;19,265
+  size_t size;20,288
+} queue_t;21,303
+
+queue/queue.c,201
+queue_t * queue_create(3,20
+void queue_delete(13,214
+int queue_enqueue(30,506
+void * queue_dequeue(53,937
+void * queue_peek(65,1179
+void queue_print_pointers(70,1271
+void queue_traverse(82,1511
+
+hash_table/hash/hash.c,31
+uint32_t super_fast_hash(3,19
+
+hash_table/hash/hash.h,98
+#define _HASH_H_2,17
+#undef get16bits14,266
+#define get16bits(17,424
+#define get16bits(20,505
+
+hash_table/time_test/main.c,98
+#define N 8,118
+#define T 9,133
+typedef uint32_t (*hash_func)hash_func11,147
+int main(13,197
+
+hash_table/time_test/cleaner.c,15
+int main(5,60
+
+hash_table/time_test/hash.c,179
+uint32_t super_fast_hash(3,19
+uint32_t fnv_hash_32(51,947
+static inline uint32_t getblock32(64,1201
+static inline uint32_t fmix32(69,1284
+uint32_t murmurhash3_x86_32(80,1432
+
+hash_table/time_test/hash.h,376
+#define _HASH_H_2,17
+#undef get16bits8,106
+#define get16bits(11,264
+#define get16bits(15,346
+#define FNV_32_PRIME 22,583
+#define NULL 25,641
+#define ROTL32(30,687
+#define ROTL64(31,718
+#define BIG_CONSTANT(33,752
+static inline uint32_t rotl32(37,809
+static inline uint64_t rotl64(42,905
+#define ROTL32(47,1001
+#define ROTL64(48,1033
+#define BIG_CONSTANT(50,1066
+
+hash_table/time_test/time_test.c,75
+#define N 8,118
+typedef uint32_t (*hash_t)hash_t10,136
+int main(12,183
+
+hash_table/hash_table.h,355
+#define _HASH_TABLE_H_2,23
+#define MAX_LOAD 11,292
+#define FIRST_SIZE 12,316
+#define MAX_SIZE 13,340
+typedef struct _node_t17,443
+  char * key;19,468
+  void * data;20,482
+  struct _node_t * next;21,497
+} hash_node_t;22,522
+typedef struct _hash_t24,538
+  hash_node_t ** tbl_p;26,563
+  size_t tbl_sz;27,587
+  long count;28,604
+} hash_t;29,618
+
+hash_table/driver/driver.c,132
+#define savestring(9,143
+inline uint64_t rdtsc(12,212
+  char * name;25,440
+  int i;26,455
+} position_t;27,464
+int main(29,479
+
+hash_table/hash_table.c,333
+static void hash_init_helper(9,358
+void hash_init(33,893
+void hash_delete(38,969
+static void hash_shallow_delete(63,1410
+static hash_node_t * hash_node_insert(94,2105
+static size_t hash_next_size(123,2725
+void hash_insert(151,3214
+hash_node_t * hash_get_node(200,4572
+void * hash_contains(220,4965
+int hash_remove(226,5149
+
+database/database.h,182
+#define _DATABASE_H_2,21
+  capital price;7,88
+  shares volume;8,105
+  capital open;9,122
+  capital close;10,138
+  capital high;11,155
+  capital low;12,171
+} db_rslt_t;13,186
+
+database/database.c,233
+capital database_get_price(3,23
+shares database_get_volume(7,109
+capital database_get_open(11,196
+capital database_get_close(15,281
+capital database_get_high(19,367
+capital database_get_low(23,452
+void database_get_all(27,536
+
+include/general_types.h,862
+#define _GENERAL_TYPES_H_2,26
+#define savestring(18,536
+#define TRUE 20,598
+#define FALSE 21,613
+typedef double capital;23,630
+typedef long shares;24,654
+typedef time_t date;25,675
+  char * symbol;29,714
+  shares num_of_shares;30,731
+  capital cost_basis;31,755
+} position_t;32,777
+  char * symbol;37,825
+  char * full_name;38,842
+  date start_date;39,862
+  date end_date;40,881
+} security_t;41,898
+  date datestamp;45,930
+  char * symbol;46,948
+  shares amount;47,965
+} order_t;48,982
+  date datestamp;52,1011
+  char * symbol;53,1029
+  shares amount;54,1046
+  capital price_per_share;55,1063
+} filled_order_t;56,1090
+  date datestamp;60,1126
+  capital capital_used;61,1144
+  capital realized_gains;62,1168
+  capital unreaslized_gains;63,1194
+  capital profit_n_loss;64,1223
+  capital positions_value;65,1248
+} bar_evnt_t;66,1275
+
+portfolio/portfolio.c,67
+portfolio_t * portfolio_create(3,24
+void portfolio_delete(15,418
+
+portfolio/portfolio.h,234
+#define _PORTFOLIO_H_2,22
+  capital capital_used;10,132
+  capital cash_available;11,156
+  capital positions_value;12,182
+  capital starting_cash;13,209
+  date start_date;14,234
+  hash_t * positions;15,253
+} portfolio_t;16,275
+
+portfolio/driver.c,16
+int main(7,108
+
+engine/engine.c,929
+  strategy_fn strategy;9,293
+  commission_fn commission;10,317
+  slippage_fn slippage;11,345
+  date start_date;12,369
+  date end_date;13,388
+  date curr_date;14,405
+  FILE * out_stream;15,423
+  long granularity;16,444
+  queue_t * order_queue;18,465
+  queue_t * filled_order_queue;19,490
+  queue_t * bar_queue;20,522
+  portfolio_t * portfolio;22,546
+} engine_t;23,573
+static engine_t * engine;26,626
+int engine_init(28,653
+void engine_register_strategy(51,1212
+void engine_register_commission_fn(55,1290
+void engine_register_slippage_fn(59,1377
+void engine_set_start_date(63,1458
+void engine_set_end_date(67,1555
+void engine_set_granularity(71,1644
+void engine_run(75,1734
+void engine_cleanup(99,2554
+void order(109,2792
+static void engine_order_helper(113,2928
+static void engine_check_order_queue(125,3261
+static void engine_print_order(169,4609
+static filled_order_t * engine_execute_order(174,4892
+
+engine/driver.c,92
+int main(11,300
+void strategy(35,843
+capital commission(39,953
+capital slippage(43,1031
+
+engine/engine.h,229
+#define _ENGINE_H_2,19
+#define SEC_IN_DAY 10,165
+#define SEC_IN_MIN 11,190
+typedef void (*strategy_fn)strategy_fn13,213
+typedef capital (*commission_fn)commission_fn14,285
+typedef capital (*slippage_fn)slippage_fn15,344
+
+hash_table/queue.c,0
+
+main.c,0
+
+queue/driver.c,35
+#define copy(7,80
+int main(9,141
+
+queue/queue.h,274
+#define _QUEUE_H_2,18
+typedef struct _queue_node_t10,121
+  void * data;12,152
+  struct _queue_node_t * prev;13,167
+} queue_node_t;14,198
+typedef struct _queue_t16,215
+  queue_node_t * front;18,241
+  queue_node_t * back;19,265
+  size_t size;20,288
+} queue_t;21,303
+
+queue/queue.c,201
+queue_t * queue_create(3,20
+void queue_delete(13,214
+int queue_enqueue(30,506
+void * queue_dequeue(53,937
+void * queue_peek(65,1179
+void queue_print_pointers(70,1271
+void queue_traverse(82,1511
+
+hash_table/hash/hash.c,31
+uint32_t super_fast_hash(3,19
+
+hash_table/hash/hash.h,98
+#define _HASH_H_2,17
+#undef get16bits14,266
+#define get16bits(17,424
+#define get16bits(20,505
+
+hash_table/time_test/main.c,98
+#define N 8,118
+#define T 9,133
+typedef uint32_t (*hash_func)hash_func11,147
+int main(13,197
+
+hash_table/time_test/cleaner.c,15
+int main(5,60
+
+hash_table/time_test/hash.c,179
+uint32_t super_fast_hash(3,19
+uint32_t fnv_hash_32(51,947
+static inline uint32_t getblock32(64,1201
+static inline uint32_t fmix32(69,1284
+uint32_t murmurhash3_x86_32(80,1432
+
+hash_table/time_test/hash.h,376
+#define _HASH_H_2,17
+#undef get16bits8,106
+#define get16bits(11,264
+#define get16bits(15,346
+#define FNV_32_PRIME 22,583
+#define NULL 25,641
+#define ROTL32(30,687
+#define ROTL64(31,718
+#define BIG_CONSTANT(33,752
+static inline uint32_t rotl32(37,809
+static inline uint64_t rotl64(42,905
+#define ROTL32(47,1001
+#define ROTL64(48,1033
+#define BIG_CONSTANT(50,1066
+
+hash_table/time_test/time_test.c,75
+#define N 8,118
+typedef uint32_t (*hash_t)hash_t10,136
+int main(12,183
+
+hash_table/hash_table.h,355
+#define _HASH_TABLE_H_2,23
+#define MAX_LOAD 11,292
+#define FIRST_SIZE 12,316
+#define MAX_SIZE 13,340
+typedef struct _node_t17,443
+  char * key;19,468
+  void * data;20,482
+  struct _node_t * next;21,497
+} hash_node_t;22,522
+typedef struct _hash_t24,538
+  hash_node_t ** tbl_p;26,563
+  size_t tbl_sz;27,587
+  long count;28,604
+} hash_t;29,618
+
+hash_table/driver/driver.c,132
+#define savestring(9,143
+inline uint64_t rdtsc(12,212
+  char * name;25,440
+  int i;26,455
+} position_t;27,464
+int main(29,479
+
+hash_table/hash_table.c,333
+static void hash_init_helper(9,358
+void hash_init(33,893
+void hash_delete(38,969
+static void hash_shallow_delete(63,1410
+static hash_node_t * hash_node_insert(94,2105
+static size_t hash_next_size(123,2725
+void hash_insert(151,3214
+hash_node_t * hash_get_node(200,4572
+void * hash_contains(220,4965
+int hash_remove(226,5149
+
+database/database.h,182
+#define _DATABASE_H_2,21
+  capital price;7,88
+  shares volume;8,105
+  capital open;9,122
+  capital close;10,138
+  capital high;11,155
+  capital low;12,171
+} db_rslt_t;13,186
+
+database/database.c,233
+capital database_get_price(3,23
+shares database_get_volume(7,109
+capital database_get_open(11,196
+capital database_get_close(15,281
+capital database_get_high(19,367
+capital database_get_low(23,452
+void database_get_all(27,536
+
+include/general_types.h,862
+#define _GENERAL_TYPES_H_2,26
+#define savestring(18,536
+#define TRUE 20,598
+#define FALSE 21,613
+typedef double capital;23,630
+typedef long shares;24,654
+typedef time_t date;25,675
+  char * symbol;29,714
+  shares num_of_shares;30,731
+  capital cost_basis;31,755
+} position_t;32,777
+  char * symbol;37,825
+  char * full_name;38,842
+  date start_date;39,862
+  date end_date;40,881
+} security_t;41,898
+  date datestamp;45,930
+  char * symbol;46,948
+  shares amount;47,965
+} order_t;48,982
+  date datestamp;52,1011
+  char * symbol;53,1029
+  shares amount;54,1046
+  capital price_per_share;55,1063
+} filled_order_t;56,1090
+  date datestamp;60,1126
+  capital capital_used;61,1144
+  capital realized_gains;62,1168
+  capital unreaslized_gains;63,1194
+  capital profit_n_loss;64,1223
+  capital positions_value;65,1248
+} bar_evnt_t;66,1275
+
+portfolio/portfolio.c,67
+portfolio_t * portfolio_create(3,24
+void portfolio_delete(15,418
+
+portfolio/portfolio.h,234
+#define _PORTFOLIO_H_2,22
+  capital capital_used;10,132
+  capital cash_available;11,156
+  capital positions_value;12,182
+  capital starting_cash;13,209
+  date start_date;14,234
+  hash_t * positions;15,253
+} portfolio_t;16,275
+
+portfolio/driver.c,16
+int main(7,108
+
+engine/engine.c,929
+  strategy_fn strategy;9,293
+  commission_fn commission;10,317
+  slippage_fn slippage;11,345
+  date start_date;12,369
+  date end_date;13,388
+  date curr_date;14,405
+  FILE * out_stream;15,423
+  long granularity;16,444
+  queue_t * order_queue;18,465
+  queue_t * filled_order_queue;19,490
+  queue_t * bar_queue;20,522
+  portfolio_t * portfolio;22,546
+} engine_t;23,573
+static engine_t * engine;26,626
+int engine_init(28,653
+void engine_register_strategy(51,1212
+void engine_register_commission_fn(55,1290
+void engine_register_slippage_fn(59,1377
+void engine_set_start_date(63,1458
+void engine_set_end_date(67,1555
+void engine_set_granularity(71,1644
+void engine_run(75,1734
+void engine_cleanup(99,2554
+void order(109,2792
+static void engine_order_helper(113,2928
+static void engine_check_order_queue(125,3261
+static void engine_print_order(169,4609
+static filled_order_t * engine_execute_order(174,4892
+
+engine/driver.c,92
+int main(11,300
+void strategy(35,843
+capital commission(39,953
+capital slippage(43,1031
+
+engine/engine.h,229
+#define _ENGINE_H_2,19
+#define SEC_IN_DAY 10,165
+#define SEC_IN_MIN 11,190
+typedef void (*strategy_fn)strategy_fn13,213
+typedef capital (*commission_fn)commission_fn14,285
+typedef capital (*slippage_fn)slippage_fn15,344
+
+hash_table/queue.c,0
+
+main.c,0
