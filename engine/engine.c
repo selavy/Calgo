@@ -75,12 +75,16 @@ void engine_set_granularity( long granularity ) {
 void engine_run( FILE * out ) {
   engine->out_stream = out;
   fprintf( engine->out_stream, "Running engine...\n" );
+  if( !engine->strategy )
+    {
+      fprintf( engine->out_stream, "Finished.\n" );
+      return;
+    }
 
   engine->curr_date = engine->start_date;
   while( engine->curr_date < engine->end_date )
     {
-      if( engine->strategy )
-	engine->strategy( &(engine->curr_date), engine->portfolio, NULL );
+      engine->strategy( &(engine->curr_date), engine->portfolio, NULL );
 
       engine_check_order_queue();
 
