@@ -23,7 +23,7 @@ typedef struct {
 } engine_t;
 
 /* for now just one engine at a time */
-static engine_t * engine;
+static engine_t * engine = NULL;
 
 int engine_init() {
   const date now = time( NULL );
@@ -77,7 +77,7 @@ void engine_run( FILE * out ) {
   fprintf( engine->out_stream, "Running engine...\n" );
   if( !engine->strategy )
     {
-      fprintf( engine->out_stream, "Finished.\n" );
+      fprintf( engine->out_stream, "No strategy loaded.\n" );
       return;
     }
 
@@ -96,7 +96,7 @@ void engine_run( FILE * out ) {
 
   fprintf( engine->out_stream, "Finished.\n" );
   queue_traverse( engine->filled_order_queue, engine_print_order );
-  fprintf( engine->out_stream, "capital used: %f\ncash available: %f\npositions value: %f\nstarting cash: %f\n",
+  fprintf( engine->out_stream, "capital used:    %f\ncash available:  %f\npositions value: %f\nstarting cash:   %f\n",
 	   engine->portfolio->capital_used,
 	   engine->portfolio->cash_available,
 	   engine->portfolio->positions_value,
@@ -125,7 +125,8 @@ void engine_cleanup() {
 }
 
 void order( const char * symbol, shares amount ) {
-  engine_order_helper( engine->curr_date + engine->granularity, symbol, amount );
+  /* engine_order_helper( engine->curr_date + engine->granularity, symbol, amount ); */
+  engine_order_helper( engine_get_date() + engine_get_granularity(), symbol, amount );
 }
 
 static void engine_order_helper( date date, const char * symbol, shares amount ) {
@@ -234,4 +235,14 @@ static filled_order_t * engine_execute_order( order_t * order ) {
     return filled_order;
 }
 
+date engine_get_date() {
+  if(!engine)
+    engine_init();
+  return engine->curr_date;
+}
 
+date engine_get_granularity() {
+  if(!engine)
+    engine_init();
+  return engine->granularity;
+}

@@ -105,4 +105,6 @@ void engine_cleanup();
  */
 void order( const char * symbol, shares amount );
 
+date engine_get_date();
+long engine_get_granularity();
 #endif
