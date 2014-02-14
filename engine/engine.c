@@ -125,8 +125,8 @@ void engine_cleanup() {
 }
 
 void order( const char * symbol, shares amount ) {
-  /* engine_order_helper( engine->curr_date + engine->granularity, symbol, amount ); */
-  engine_order_helper( engine_get_date() + engine_get_granularity(), symbol, amount );
+  engine_order_helper( engine->curr_date + engine->granularity, symbol, amount );
+  /* engine_order_helper( engine_get_date() + engine_get_granularity(), symbol, amount ); */
 }
 
 static void engine_order_helper( date date, const char * symbol, shares amount ) {
@@ -245,4 +245,8 @@ date engine_get_granularity() {
   if(!engine)
     engine_init();
   return engine->granularity;
+}
+
+portfolio_t * get_portfolio() {
+  return engine->portfolio;
 }

@@ -13,10 +13,11 @@ capital slippage( const order_t * order, void * args );
 
 int main(int argc, char **argv) {
   void *dynamic_lib;
-  strategy_fn strategy;
+  /* strategy_fn strategy; */
+  void (*init)();
+  void (*cleanup)();
+  void (*init_strat)();
   char * error;
-  struct tm * start_tm;
-  date now = time( NULL ), start;
 
   if( argc > 1 ) {
     print_usage_message();
@@ -31,28 +32,44 @@ int main(int argc, char **argv) {
 	fprintf( stderr, "%s\n", error );
       exit(0);
     }
-
-  dlerror(); /* clear any old errors */
-  strategy = (strategy_fn) dlsym( dynamic_lib, "strategy" );
+  /*
+  dlerror();
+  *(void**) (&strategy) = dlsym( dynamic_lib, "strategy" );
   if( (error = dlerror()) )
     {
       print_unable_to_open_strategy();
       fprintf( stderr, "%s\n", error );
       exit(0);
     }
+  */
   
-  start_tm = localtime( &now );
-  start_tm->tm_year = 100; /* 1900 + 100 = 2000 */
-  start = mktime( start_tm );
+  *(void**) (&init) = dlsym( dynamic_lib, "init" );
+  if( (error = dlerror()) )
+    {
+      print_unable_to_open_strategy();
+      fprintf( stderr, "%s\n", error );
+      exit(0);
+    }
 
-  engine_init();
-  engine_register_strategy( strategy );
-  engine_register_commission_fn( &commission );
-  engine_register_slippage_fn( &slippage );
-  engine_set_start_date( &start );
-  engine_set_end_date( &now );
-  engine_run( stdout );
-  engine_cleanup();
+  *(void**) (&cleanup) = dlsym( dynamic_lib, "cleanup" );
+  if( (error = dlerror()) )
+    {
+      print_unable_to_open_strategy();
+      fprintf( stderr, "%s\n", error );
+      exit(0);
+    }
+
+  *(void**) (&init_strat) = dlsym( dynamic_lib, "strategy_init" );
+  if( (error = dlerror()) )
+    {
+      print_unable_to_open_strategy();
+      fprintf( stderr, "%s\n", error );
+      exit(0);
+    }
+
+  (*init)();
+  (*init_strat)();
+  (*cleanup)();
   dlclose( dynamic_lib );
 
   return 0;

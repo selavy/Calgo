@@ -8,10 +8,12 @@ SHARED = -shared -Wl,-soname,
 
 calgo: $(OBJS) libstrategy.so
 	$(CC) -o calgo $(LD) $(CFLAGS) $(INC) $(OBJS)
-libstrategy.so: strategy.o engine.o
-	$(CC) -o libstrategy.so -shared -Wl,-soname,libstrategy.so strategy.o engine.o queue.o hash_table.o portfolio.o hash.o database.o
+libstrategy.so: strategy.o engine.o backtest.o
+	$(CC) -o libstrategy.so -fPIC -shared -Wl,-soname,libstrategy.so strategy.o engine.o portfolio.o queue.o hash_table.o hash.o database.o backtest.o
 strategy.o: strategy.h strategy.c
 	$(CC) $(CFLAGS) $(INC) -c strategy.c
+backtest.o: backtest.h backtest.c
+	$(CC) $(CFLAGS) $(INC) -c backtest.c
 main.o: main.c
 	$(CC) $(CFLAGS) $(INC) -c main.c
 hash.o: ./hash_table/hash/hash.h ./hash_table/hash/hash.c
