@@ -1,5 +1,7 @@
 #include "engine.h"
 
+#define _PRINT_
+
 static void engine_order_helper( date date, const char * symbol, shares amount );
 static void engine_check_order_queue();
 static filled_order_t * engine_execute_order( order_t * order );
@@ -74,7 +76,9 @@ void engine_set_granularity( long granularity ) {
 
 void engine_run( FILE * out ) {
   engine->out_stream = out;
+#ifdef _PRINT_
   fprintf( engine->out_stream, "Running engine...\n" );
+#endif
   if( !engine->strategy )
     {
       fprintf( engine->out_stream, "No strategy loaded.\n" );
@@ -94,13 +98,18 @@ void engine_run( FILE * out ) {
       engine->curr_date += engine->granularity;
     }
 
+#ifdef _PRINT_
   fprintf( engine->out_stream, "Finished.\n" );
+#endif
   queue_traverse( engine->filled_order_queue, engine_print_order );
+#ifdef _PRINT_
   fprintf( engine->out_stream, "capital used:    %f\ncash available:  %f\npositions value: %f\nstarting cash:   %f\n",
 	   engine->portfolio->capital_used,
 	   engine->portfolio->cash_available,
 	   engine->portfolio->positions_value,
 	   engine->portfolio->starting_cash );
+#endif
+
 }
 
 static void engine_helper_delete_order_string( void * buf ) {
@@ -186,7 +195,9 @@ static void engine_check_order_queue() {
 
 static void engine_print_order( const void * const filled_order ) {
   const filled_order_t * const o = (filled_order_t*) filled_order;
+#ifdef _PRINT_
   printf("%li shares of %s at $%.4f per share at %d\n", (long) o->amount, o->symbol, (double) o->price_per_share, (int) o->datestamp );
+#endif
 }
 
 static filled_order_t * engine_execute_order( order_t * order ) {

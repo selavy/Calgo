@@ -10,5 +10,6 @@
 
 void init();
 void cleanup();
+void run();
 
 #endif
