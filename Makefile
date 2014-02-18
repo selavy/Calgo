@@ -1,6 +1,7 @@
 CC = gcc
 DEBUG = -g
-CFLAGS = -pedantic $(DEBUG) -fPIC
+NOTDEBUG = -O6 -fomit-frame-pointer
+CFLAGS = -pedantic -fPIC $(NOTDEBUG)
 INC = -I./include/ -I./portfolio/ -I./hash_table/ -I./database/ -I./queue/ -I./engine/
 OBJS = main.o hash.o hash_table.o database.o queue.o engine.o portfolio.o
 LD = -ldl
