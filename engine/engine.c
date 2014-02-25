@@ -1,6 +1,6 @@
 #include "engine.h"
 
-#define _PRINT_
+/* #define _PRINT_ */
 
 static void engine_order_helper( date date, const char * symbol, shares amount );
 static void engine_check_order_queue();
