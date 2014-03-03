@@ -15,6 +15,7 @@ int main(int argc, char **argv) {
   void (*init)();
   void (*cleanup)();
   void (*init_strat)();
+  void (*run)();
   char * error;
 
   if( argc > 1 ) {
@@ -98,9 +99,17 @@ alignment requirements as each other. Pointers to other types need not have the 
       exit(0);
     }
 
+  *(void**) (&run) = dlsym( dynamic_lib, "run" );
+  if( (error = dlerror()) )
+    {
+      fprintf( stderr, "%s\n", error );
+      exit(0);
+    }
+
   /* here I now use the void pointer as function pointers which is non-standard C because they could potentially be different sizes */
   (*init)();
   (*init_strat)();
+  (*run)();
   (*cleanup)();
   dlclose( dynamic_lib );
 

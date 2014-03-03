@@ -6,6 +6,7 @@ INC = -I./include/ -I./portfolio/ -I./hash_table/ -I./database/ -I./queue/ -I./e
 OBJS = main.o hash.o hash_table.o database.o queue.o engine.o portfolio.o
 LD = -ldl
 SHARED = -shared -Wl,-soname,
+PRINT_STATUS = -D_PRINT_
 
 calgo: $(OBJS) libstrategy.so
 	$(CC) -o calgo $(LD) $(CFLAGS) $(INC) $(OBJS)
@@ -26,7 +27,7 @@ database.o: ./database/database.h ./database/database.c
 queue.o: ./queue/queue.h ./queue/queue.c
 	$(CC) $(CFLAGS) $(INC) -c ./queue/queue.c
 engine.o: ./engine/engine.h ./engine/engine.c
-	$(CC) $(CFLAGS) $(INC) -c ./engine/engine.c
+	$(CC) $(CFLAGS) $(INC) $(PRINT_STATUS) -c ./engine/engine.c
 portfolio.o: ./portfolio/portfolio.h ./portfolio/portfolio.c
 	$(CC) $(CFLAGS) $(INC) -c ./portfolio/portfolio.c
 
