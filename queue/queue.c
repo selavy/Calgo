@@ -68,19 +68,6 @@ void * queue_peek( const queue_t * queue ) {
   return queue->front->data;
 }
 
-#ifdef _DEBUG_
-void queue_print_pointers( const queue_t * const queue ) {
-  queue_node_t * node = queue->front;
-  
-  while( node != NULL )
-    {
-      printf("%p(%p)->", (void*) node, node->data);
-      node = node->prev;
-    }
-  printf("|\n");
-}
-#endif
-
 void queue_traverse( const queue_t * const queue, void (*fn)(const void * const) ) {
   queue_node_t * curr = queue->front;
 

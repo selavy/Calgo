@@ -10,19 +10,20 @@
 #define SEC_IN_DAY 86400
 #define SEC_IN_MIN 60
 
-typedef void (*strategy_fn)(const date *, const portfolio_t *, void *);
+typedef void* (*strategy_fn)(const date *, const portfolio_t *, void *);
 typedef capital (*commission_fn)(const order_t *, void *);
 typedef capital (*slippage_fn)(const order_t *, void *);
+typedef void* (*strategy_init_fn)();
 
 /**
  * function: engine_init()
  * parameters:
  * preconditions: 
- * postconditions:
+ * postconditions: instance of an engine is prepared to run
  * returns:
  * notes: must be paired with call to engine_cleanup()
  */
-int  engine_init();
+extern int  engine_init();
 
 /**
  * function: engine_register_strategy()
@@ -32,7 +33,7 @@ int  engine_init();
  * returns:
  * notes:
  */
-void engine_register_strategy( strategy_fn fn );
+extern void engine_register_strategy( strategy_fn fn );
 
 /**
  * function: engine_register_commission_fn()
@@ -42,7 +43,7 @@ void engine_register_strategy( strategy_fn fn );
  * returns:
  * notes:
  */
-void engine_register_commission_fn( commission_fn fn );
+extern void engine_register_commission_fn( commission_fn fn );
 
 /**
  * function: engine_register_slippage_fn()
@@ -52,7 +53,7 @@ void engine_register_commission_fn( commission_fn fn );
  * returns:
  * notes:
  */
-void engine_register_slippage_fn( slippage_fn fn );
+extern void engine_register_slippage_fn( slippage_fn fn );
 
 /**
  * function: engine_set_start_date()
@@ -62,7 +63,7 @@ void engine_register_slippage_fn( slippage_fn fn );
  * returns:
  * notes:
  */
-void engine_set_start_date( const date * start_date );
+extern void engine_set_start_date( const date * start_date );
 
 /**
  * function: engine_set_end_date()
@@ -72,17 +73,21 @@ void engine_set_start_date( const date * start_date );
  * returns:
  * notes:
  */
-void engine_set_end_date( const date * end_date );
+extern void engine_set_end_date( const date * end_date );
 
 /**
  * function: engine_run()
- * parameters:
- * preconditions:
- * postconditions:
+ * parameters:     +out : FILE pointer to stream to which to output
+ *                 +data: void* that will be passed to strategy can be used to maintain state 
+                          in strategy
+ * preconditions:  +engine_init() has been called
+ * postconditions: +engine is run on specified date range as setup with engine_set_start_date()
+ *                  and engine_set_end_date() using the given strategy function
+ *                 +will print the output of the strategy to out
  * returns:
  * notes:
  */
-void engine_run( FILE * out );
+extern void engine_run( FILE * out, void * data );
 
 /**
  * function: engine_cleanup()
@@ -92,7 +97,7 @@ void engine_run( FILE * out );
  * returns:
  * notes: must be paired with engine_init()
  */
-void engine_cleanup();
+extern void engine_cleanup();
 
 /**
  * function: order()
@@ -103,10 +108,10 @@ void engine_cleanup();
  * returns:
  * notes: amount > 0 means buy, amount < 0 means sell
  */
-void order( const char * symbol, shares amount );
+extern void order( const char * symbol, shares amount );
 
-date engine_get_date();
-long engine_get_granularity();
+extern date engine_get_date();
+extern long engine_get_granularity();
 
-portfolio_t * get_portfolio();
+extern portfolio_t * get_portfolio();
 #endif

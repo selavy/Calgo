@@ -15,7 +15,7 @@ void init() {
 }
 
 void run() {
-  engine_run( stdout );
+  engine_run( stdout, strategy_init() );
 }
 
 void cleanup() {

@@ -37,7 +37,7 @@ typedef struct _hash_t
  * returns:
  * notes:
  */
-void hash_init( hash_t ** tbl );
+extern void hash_init( hash_t ** tbl );
 
 /**
  * function: hash_delete()
@@ -47,7 +47,7 @@ void hash_init( hash_t ** tbl );
  * returns:
  * notes: must be called to clean up heap allocated memory
  */
-void hash_delete( hash_t ** tbl );
+extern void hash_delete( hash_t ** tbl );
 
 /**
  * function: hash_insert()
@@ -62,7 +62,7 @@ void hash_delete( hash_t ** tbl );
  * returns:
  * notes: buf is not copied so do not delete buf, hash_delete() will do that
  */
-void hash_insert( hash_t ** tbl, char * key, void * buf );
+extern void hash_insert( hash_t ** tbl, char * key, void * buf );
 
 /**
  * function: hash_get_node()
@@ -79,7 +79,7 @@ void hash_insert( hash_t ** tbl, char * key, void * buf );
  *        but remember to deallocate data first, then re-allocate for the new
  *        object.
  */
-hash_node_t * hash_get_node( const hash_t * tbl, const char * key );
+extern hash_node_t * hash_get_node( const hash_t * tbl, const char * key );
 
 /**
  * function: hash_contains()
@@ -91,7 +91,7 @@ hash_node_t * hash_get_node( const hash_t * tbl, const char * key );
  *                 +NULL if key not in table
  * notes:
  */
-void * hash_contains( const hash_t * tbl, const char * key );
+extern void * hash_contains( const hash_t * tbl, const char * key );
 
 /**
  * function: hash_remove()
@@ -104,6 +104,6 @@ void * hash_contains( const hash_t * tbl, const char * key );
  *                 +FALSE if key not in table
  * notes:
  */
-int hash_remove( hash_t ** tbl, const char * key );
+extern int hash_remove( hash_t ** tbl, const char * key );
 
 #endif

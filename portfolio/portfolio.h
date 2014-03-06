@@ -25,7 +25,7 @@ typedef struct
  * returns:        +a pointer to the newly created portfolio_t struct
  * notes:          should pair call to this with portfolio_delete()
  */
-portfolio_t * portfolio_create( date start_date );
+extern portfolio_t * portfolio_create( date start_date );
 
 /**
  * function: portfolio_delete()
@@ -37,6 +37,6 @@ portfolio_t * portfolio_create( date start_date );
  * returns:        (void)
  * notes:
  */
-void portfolio_delete( portfolio_t ** portfolio );
+extern void portfolio_delete( portfolio_t ** portfolio );
 
 #endif

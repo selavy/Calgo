@@ -3,10 +3,6 @@
 
 #include "general_types.h"
 
-#ifdef _DEBUG_
-#include <stdio.h>
-#endif /* _DEBUG_ */
-
 typedef struct _queue_node_t
 {
   void * data;
@@ -30,7 +26,7 @@ typedef struct _queue_t
  * returns:        +pointer to new queue_t struct
  * notes: must pair with call to queue_delete() to not leak memory
  */
-queue_t * queue_create();
+extern queue_t * queue_create();
 
 /**
  * function: queue_delete()
@@ -42,7 +38,7 @@ queue_t * queue_create();
  * returns:
  * notes: if free( node->data ) is enough to not leak memory then just pass NULL for delete_fn
  */
-void queue_delete( queue_t ** queue, void (*delete_fn)(void *) );
+extern void queue_delete( queue_t ** queue, void (*delete_fn)(void *) );
 
 /**
  * function: queue_enqueue()
@@ -57,7 +53,7 @@ void queue_delete( queue_t ** queue, void (*delete_fn)(void *) );
  *                 +FALSE if not inserted
  * notes:
  */
-int queue_enqueue( queue_t * queue, void * buf );
+extern int queue_enqueue( queue_t * queue, void * buf );
 
 /**
  * function: queue_dequeue()
@@ -67,7 +63,7 @@ int queue_enqueue( queue_t * queue, void * buf );
  * returns:        +pointer to data in node at front of list
  * notes:
  */
-void * queue_dequeue( queue_t * queue );
+extern void * queue_dequeue( queue_t * queue );
 
 /**
  * function: queue_peek()
@@ -77,19 +73,7 @@ void * queue_dequeue( queue_t * queue );
  * returns:        +pointer to data in node at front of list
  * notes:
  */
-void * queue_peek( const queue_t * const queue );
-
-#ifdef _DEBUG_
-/**
- * function: queue_print_pointers()
- * parameters:     +queue: the queue_t structure to be printed
- * preconditions: 
- * postconditions: +contents of queue is printed to stdout
- * returns:
- * notes:
- */
-void queue_print_pointers( const queue_t * const queue );
-#endif /* _DEBUG_ */
+extern void * queue_peek( const queue_t * const queue );
 
 /**
  * function: queue_traverse()
@@ -100,6 +84,6 @@ void queue_print_pointers( const queue_t * const queue );
  * returns:
  * notes:
  */
-void queue_traverse( const queue_t * const queue, void (*fn)(const void * const) );
+extern void queue_traverse( const queue_t * const queue, void (*fn)(const void * const) );
 
 #endif /* ifndef _QUEUE_H_ */

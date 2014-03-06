@@ -91,14 +91,6 @@ alignment requirements as each other. Pointers to other types need not have the 
       exit(0);
     }
 
-  *(void**) (&init_strat) = dlsym( dynamic_lib, "strategy_init" );
-  if( (error = dlerror()) )
-    {
-      print_unable_to_open_strategy();
-      fprintf( stderr, "%s\n", error );
-      exit(0);
-    }
-
   *(void**) (&run) = dlsym( dynamic_lib, "run" );
   if( (error = dlerror()) )
     {
@@ -108,7 +100,6 @@ alignment requirements as each other. Pointers to other types need not have the 
 
   /* here I now use the void pointer as function pointers which is non-standard C because they could potentially be different sizes */
   (*init)();
-  (*init_strat)();
   (*run)();
   (*cleanup)();
   dlclose( dynamic_lib );
