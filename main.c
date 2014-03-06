@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "general_types.h"
 #include <dlfcn.h>
-#include <time.h>
-#include "engine.h"
-#include "database.h"
 
 static void print_usage_message();
 static inline void print_unable_to_open_strategy();
@@ -12,9 +8,6 @@ capital slippage( const order_t * order, void * args );
 
 int main(int argc, char **argv) {
   void *dynamic_lib;
-  void (*init)();
-  void (*cleanup)();
-  void (*init_strat)();
   void (*run)();
   char * error;
 
@@ -32,7 +25,6 @@ int main(int argc, char **argv) {
       exit(0);
     }
   
-
   /* These are the calls that I am questioning      */
   /* The signature for dlsym is:                    */
   /* void *dlsym(void *handle, const char *symbol); */
@@ -75,22 +67,6 @@ pointer to a character type.39) Similarly, pointers to qualified or unqualified 
 alignment requirements as each other. Pointers to other types need not have the same representation or alignment requirements.
   */
 
-  *(void**) (&init) = dlsym( dynamic_lib, "init" );
-  if( (error = dlerror()) )
-    {
-      print_unable_to_open_strategy();
-      fprintf( stderr, "%s\n", error );
-      exit(0);
-    }
-
-  *(void**) (&cleanup) = dlsym( dynamic_lib, "cleanup" );
-  if( (error = dlerror()) )
-    {
-      print_unable_to_open_strategy();
-      fprintf( stderr, "%s\n", error );
-      exit(0);
-    }
-
   *(void**) (&run) = dlsym( dynamic_lib, "run" );
   if( (error = dlerror()) )
     {
@@ -98,10 +74,7 @@ alignment requirements as each other. Pointers to other types need not have the 
       exit(0);
     }
 
-  /* here I now use the void pointer as function pointers which is non-standard C because they could potentially be different sizes */
-  (*init)();
   (*run)();
-  (*cleanup)();
   dlclose( dynamic_lib );
 
   return 0;

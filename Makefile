@@ -1,10 +1,11 @@
 CC = gcc
 DEBUG = -g
 NOTDEBUG = -Ofast -fomit-frame-pointer
-CFLAGS = -pedantic -fPIC $(NOTDEBUG)
+CFLAGS = -std=c99 -pedantic -fPIC $(NOTDEBUG)
 INC = -I./include/ -I./portfolio/ -I./hash_table/ -I./database/ -I./queue/ -I./engine/
 OBJS = main.o hash.o hash_table.o database.o queue.o engine.o portfolio.o
 LD = -ldl
+PYTHON = -I/usr/include/python2.7 -lpython2.7
 SHARED = -shared -Wl,-soname,
 PRINT_STATUS = #-D_PRINT_
 
@@ -23,7 +24,7 @@ hash.o: ./hash_table/hash/hash.h ./hash_table/hash/hash.c
 hash_table.o: ./hash_table/hash_table.h ./hash_table/hash_table.c
 	$(CC) $(CFLAGS) $(INC) -c ./hash_table/hash_table.c
 database.o: ./database/database.h ./database/database.c
-	$(CC) $(CFLAGS) $(INC) -c ./database/database.c
+	$(CC) $(CFLAGS) $(INC) -Wlong-long -c ./database/database.c
 queue.o: ./queue/queue.h ./queue/queue.c
 	$(CC) $(CFLAGS) $(INC) -c ./queue/queue.c
 engine.o: ./engine/engine.h ./engine/engine.c

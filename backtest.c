@@ -1,6 +1,6 @@
 #include "backtest.h"
 
-void init() {
+void run() {
   struct tm * start_tm;
   date now = time( NULL ), start;
 
@@ -12,12 +12,6 @@ void init() {
   engine_register_strategy( &strategy );
   engine_set_start_date( &start );
   engine_set_end_date( &now );
-}
-
-void run() {
   engine_run( stdout, strategy_init() );
-}
-
-void cleanup() {
   engine_cleanup();
 }

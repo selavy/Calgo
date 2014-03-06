@@ -1,11 +1,10 @@
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
 
-#include "general_types.h"
 #include "portfolio.h"
 #include "queue.h"
+#include "general_types.h"
 #include "database.h"
-#include <stdio.h> /* for FILE */
 
 #define SEC_IN_DAY 86400
 #define SEC_IN_MIN 60
