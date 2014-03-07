@@ -1,5 +1,4 @@
 #include "hash_table.h"
-extern "C" {
 
 static void hash_init_helper( hash_t ** tbl, size_t size );
 static void hash_shallow_delete( hash_t ** tbl );
@@ -250,6 +249,4 @@ int hash_remove( hash_t ** tbl, const char * key ) {
     }
   
   return FALSE;
-}
-
 }

@@ -8,9 +8,9 @@ static filled_order_t * engine_execute_order( order_t * order );
 static void engine_print_order( const void * const filled_order );
 
 typedef struct {
-  strategy_fn strategy;
-  commission_fn commission;
-  slippage_fn slippage;
+  PyObject* strategy;
+  PyObject* commission;
+  PyObject* slippage;
   date start_date;
   date end_date;
   date curr_date;
@@ -50,15 +50,15 @@ int engine_init() {
   return TRUE;
 }
 
-void engine_register_strategy( strategy_fn fn ) {
+void engine_register_strategy( PyObject* fn ) {
   engine->strategy = fn;
 }
 
-void engine_register_commission_fn( commission_fn fn ) {
+void engine_register_commission_fn( PyObject* fn ) {
   engine->commission = fn;
 }
 
-void engine_register_slippage_fn( slippage_fn fn ) {
+void engine_register_slippage_fn( PyObject* fn ) {
   engine->slippage = fn;
 }
 
@@ -75,20 +75,42 @@ void engine_set_granularity( long granularity ) {
 }
 
 void engine_run( FILE * out, void * data ) {
+  PyObject *result, *arglist, *pValue;
   engine->out_stream = out;
 #ifdef _PRINT_
   fprintf( engine->out_stream, "Running engine...\n" );
 #endif
+
   if( !engine->strategy )
     {
       fprintf( engine->out_stream, "No strategy loaded.\n" );
+      return;
+    }
+  if( !PyCallable_Check( engine->strategy ) )
+    {
+      if (PyErr_Occurred()) PyErr_Print();
+      fprintf( stderr, "Error loading python module!\n" );
       return;
     }
 
   engine->curr_date = engine->start_date;
   while( engine->curr_date < engine->end_date )
     {
+      /*
       data = engine->strategy( &(engine->curr_date), engine->portfolio, data );
+      */
+      arglist = PyTuple_New(1);
+      if(!arglist) { fprintf(stderr, "error making argument list\n"); return; }
+      pValue = PyInt_FromLong(engine->curr_date);
+      if(!pValue) { fprintf(stderr, "error packaging arguments\n"); return; }
+      PyTuple_SetItem(arglist, 0, pValue);
+      result = PyObject_CallObject(engine->strategy, arglist);
+      Py_DECREF(arglist);
+      if(!result) {
+	PyErr_Print();
+	fprintf(stderr, "Call to strategy failed\n");
+	return;
+      }
 
       engine_check_order_queue();
 
@@ -128,6 +150,10 @@ void engine_cleanup() {
   queue_delete( &(engine->order_queue), engine_helper_delete_order_string );
   queue_delete( &(engine->filled_order_queue), engine_helper_delete_filled_order_string );
   queue_delete( &(engine->bar_queue), NULL );
+
+  if(engine->strategy) Py_XDECREF(engine->strategy);
+  if(engine->commission) Py_XDECREF(engine->commission);
+  if(engine->slippage) Py_XDECREF(engine->slippage);
 
   portfolio_delete( &(engine->portfolio) );
   free( engine );
@@ -203,8 +229,8 @@ static void engine_print_order( const void * const filled_order ) {
 
 static filled_order_t * engine_execute_order( order_t * order ) {
   const shares amount = order->amount;
-  const capital slippage = (engine->slippage) ? (engine->slippage)( order, NULL ) : 0.0f;
-  const capital commission = (engine->commission) ? (engine->commission)( order, NULL ) : 0.0f;
+  const capital slippage = 0;/*(engine->slippage) ? (engine->slippage)( order, NULL ) : 0.0f; */
+  const capital commission  = 0;/*= (engine->commission) ? (engine->commission)( order, NULL ) : 0.0f; */
   const capital price = database_get_price( order->symbol, &(order->datestamp) ) * ( 1 + slippage ) - commission;
   const capital total_spent = price * amount;
   hash_node_t * stock;

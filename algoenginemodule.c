@@ -69,6 +69,7 @@ get_low(PyObject *self, PyObject *args)
   Py_RETURN_NONE;
 }
 
+/*
 capital
 slippage(const order_t * order, void * data) {
   PyObject *arglist, *result;
@@ -94,6 +95,7 @@ commission(const order_t* order, void* data ) {
   if(!PyArg_ParseTuple(result, "d", &retVal)) return 0;
   return retVal;
 }
+*/
 
 static PyObject *
 set_commission_func(PyObject *self, PyObject *args)

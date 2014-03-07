@@ -1,20 +1,21 @@
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
 
+#include <Python.h>
 #include "portfolio.h"
 #include "queue.h"
 #include "general_types.h"
 #include "database.h"
 
-extern "C" {
-
 #define SEC_IN_DAY 86400
 #define SEC_IN_MIN 60
 
+  /*
 typedef void* (*strategy_fn)(const date *, const portfolio_t *, void *);
 typedef capital (*commission_fn)(const order_t *, void *);
 typedef capital (*slippage_fn)(const order_t *, void *);
 typedef void* (*strategy_init_fn)();
+  */
 
 /**
  * function: engine_init()
@@ -34,7 +35,7 @@ extern int  engine_init();
  * returns:
  * notes:
  */
-extern void engine_register_strategy( strategy_fn fn );
+extern void engine_register_strategy( PyObject* fn );
 
 /**
  * function: engine_register_commission_fn()
@@ -44,7 +45,7 @@ extern void engine_register_strategy( strategy_fn fn );
  * returns:
  * notes:
  */
-extern void engine_register_commission_fn( commission_fn fn );
+extern void engine_register_commission_fn( PyObject* fn );
 
 /**
  * function: engine_register_slippage_fn()
@@ -54,7 +55,7 @@ extern void engine_register_commission_fn( commission_fn fn );
  * returns:
  * notes:
  */
-extern void engine_register_slippage_fn( slippage_fn fn );
+extern void engine_register_slippage_fn( PyObject* fn );
 
 /**
  * function: engine_set_start_date()
@@ -115,7 +116,5 @@ extern date engine_get_date();
 extern long engine_get_granularity();
 
 extern portfolio_t * get_portfolio();
-
-}
 
 #endif

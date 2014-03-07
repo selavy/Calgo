@@ -11,14 +11,12 @@ PYTHON = -I/usr/include/python2.7 -lpython2.7
 SHARED = -shared -Wl,-soname,
 PRINT_STATUS = #-D_PRINT_
 
-pymain: main.c
-	$(CC) -o pymain $(CFLAGS) main.c $(PYTHON)
 calgo: $(OBJS)
-	$(CC) -o calgo $(CFLAGS) $(INC) $(OBJS) $(LD)
+	$(CC) -o calgo $(CFLAGS) $(INC) $(OBJS) $(LD) $(PYTHON)
 libstrategy.so: strategy.o engine.o backtest.o
 	$(CC) -o libstrategy.so -fPIC -shared -Wl,-soname,libstrategy.so strategy.o engine.o portfolio.o queue.o hash_table.o hash.o database.o backtest.o
 main.o: main.c
-	$(CC) $(CFLAGS) -c main.c $(PYTHON)
+	$(CC) $(CFLAGS) $(INC) -c main.c $(PYTHON)
 strategy.o: strategy.h strategy.c
 	$(CC) $(CFLAGS) $(INC) -c strategy.c
 backtest.o: backtest.h backtest.c
@@ -32,7 +30,7 @@ database.o: ./database/database.h ./database/database.c
 queue.o: ./queue/queue.h ./queue/queue.c
 	$(CC) $(CFLAGS) $(INC) -c ./queue/queue.c
 engine.o: ./engine/engine.h ./engine/engine.c
-	$(CC) $(CFLAGS) $(INC) $(PRINT_STATUS) -c ./engine/engine.c
+	$(CC) $(CFLAGS) $(INC) $(PRINT_STATUS) -c ./engine/engine.c $(PYTHON)
 portfolio.o: ./portfolio/portfolio.h ./portfolio/portfolio.c
 	$(CC) $(CFLAGS) $(INC) -c ./portfolio/portfolio.c
 build: algoenginemodule.c

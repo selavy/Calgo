@@ -1,7 +1,5 @@
 #include "queue.h"
 
-extern "C" {
-
 queue_t * queue_create() {
   queue_t * queue = malloc( sizeof( *queue ) );
   if( queue == NULL ) return NULL;
@@ -78,6 +76,4 @@ void queue_traverse( const queue_t * const queue, void (*fn)(const void * const)
       fn( curr->data );
       curr = curr->prev;
     }
-}
-
 }
