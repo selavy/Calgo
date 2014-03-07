@@ -1,8 +1,7 @@
+#include <Python.h>
 #include "general_types.h"
 #include <dlfcn.h>
 #include "database.h"
-
-extern "C" {
 
 static void print_usage_message();
 static inline void print_unable_to_open_strategy();
@@ -105,4 +104,3 @@ capital slippage( const order_t * order, void * args ) {
   return (order->amount > 0) ? slippage_val : -1 * slippage_val;
 }
 
-}

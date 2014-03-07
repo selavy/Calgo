@@ -11,7 +11,7 @@ SHARED = -shared -Wl,-soname,
 PRINT_STATUS = #-D_PRINT_
 
 calgo: $(OBJS) libstrategy.so
-	$(CPP) -o calgo $(CFLAGS) $(INC) $(OBJS) $(LD)
+	$(CC) -o calgo $(CFLAGS) $(INC) $(OBJS) $(LD)
 libstrategy.so: strategy.o engine.o backtest.o
 	$(CC) -o libstrategy.so -fPIC -shared -Wl,-soname,libstrategy.so strategy.o engine.o portfolio.o queue.o hash_table.o hash.o database.o backtest.o
 strategy.o: strategy.h strategy.c
@@ -25,7 +25,7 @@ hash.o: ./hash_table/hash/hash.h ./hash_table/hash/hash.c
 hash_table.o: ./hash_table/hash_table.h ./hash_table/hash_table.c
 	$(CC) $(CFLAGS) $(INC) -c ./hash_table/hash_table.c
 database.o: ./database/database.h ./database/database.c
-	$(CPP) $(CFLAGS) $(INC) -Wlong-long -c ./database/database.c
+	$(CC) $(CFLAGS) $(INC) -Wlong-long -c ./database/database.c
 queue.o: ./queue/queue.h ./queue/queue.c
 	$(CC) $(CFLAGS) $(INC) -c ./queue/queue.c
 engine.o: ./engine/engine.h ./engine/engine.c

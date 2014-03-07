@@ -8,8 +8,6 @@
 #include "general_types.h"
 #include "strategy.h"
 
-extern "C" {
-
 /**
  * function: init()
  * parameters:
@@ -39,7 +37,5 @@ extern void cleanup();
  * notes:
  */
 extern void run();
-
-}
 
 #endif

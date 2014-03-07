@@ -1,7 +1,5 @@
 #include "backtest.h"
 
-extern "C" {
-
 void run() {
   struct tm * start_tm;
   date now = time( NULL ), start;
@@ -18,4 +16,3 @@ void run() {
   engine_cleanup();
 }
 
-}
