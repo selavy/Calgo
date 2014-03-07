@@ -1,4 +1,7 @@
-#include <Python.h>
+#include "algoenginemodule.h"
+
+static PyObject *commission_fn = NULL;
+static PyObject *slippage_fn   = NULL;
 
 static PyObject * get_price(PyObject*, PyObject*);
 static PyObject * get_volume(PyObject*, PyObject*);
@@ -8,7 +11,6 @@ static PyObject * get_high(PyObject*, PyObject*);
 static PyObject * get_low(PyObject*, PyObject*);
 static PyObject * set_commission_func(PyObject*, PyObject*);
 static PyObject * set_slippage_func(PyObject*, PyObject*);
-PyMODINIT_FUNC initalgoengine(void);
 
 static PyMethodDef AlgoEngineMethods[] = {
   {"get_price", get_price, METH_VARARGS, "Get the price of a stock at a given date"},
@@ -35,7 +37,7 @@ get_volume(PyObject *self, PyObject *args)
   printf("Called get_volume()\n");
   Py_RETURN_NONE;
 }
-
+ 
 static PyObject *
 get_open(PyObject *self, PyObject *args)
 {
@@ -64,24 +66,77 @@ static PyObject *
 get_low(PyObject *self, PyObject *args)
 {
   printf("Called get_low()\n");
-  /* Py_RETURN_NONE; */
-  return Py_BuildValue("i", 5);
+  Py_RETURN_NONE;
+}
+
+capital
+slippage(const order_t * order, void * data) {
+  PyObject *arglist, *result;
+  double retVal;
+
+  if(!slippage_fn) return 0;
+  arglist = Py_BuildValue("(i)(s)(i)", order->datestamp, order->symbol, order->amount);
+  result = PyObject_CallObject(slippage_fn, arglist);
+  Py_DECREF(arglist);
+  if(!PyArg_ParseTuple(result, "d", &retVal)) return 0;
+  return retVal;
+}
+
+capital
+commission(const order_t* order, void* data ) {
+  PyObject *arglist, *result;
+  double retVal;
+  
+  if(!commission_fn) return 0;
+  arglist = Py_BuildValue("(i)(s)(i)", order->datestamp, order->symbol, order->amount);
+  result = PyObject_CallObject(commission_fn, arglist);
+  Py_DECREF(arglist);
+  if(!PyArg_ParseTuple(result, "d", &retVal)) return 0;
+  return retVal;
 }
 
 static PyObject *
 set_commission_func(PyObject *self, PyObject *args)
 {
+  PyObject *temp, *result = NULL;
+#ifdef DEBUG
   printf("Called set_commission_func()\n");
-  /* Py_RETURN_NONE; */
-  return Py_BuildValue("i", 5);
+#endif
+
+  if(PyArg_ParseTuple(args, "O:set_callback", &temp)) {
+    if(!PyCallable_Check(temp)) {
+      PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+      return NULL;
+    }
+    Py_XINCREF(temp); /* Add a reference to new commission func */
+    Py_XDECREF(commission_fn); /* Dispose of previous commission func */
+    commission_fn = temp;
+    Py_RETURN_NONE;
+  }
+  
+  return result;
 }
 
 static PyObject *
 set_slippage_func(PyObject *self, PyObject *args)
 {
+  PyObject *temp, *result = NULL;
+#ifdef DEBUG
   printf("Called set_slippage_func()\n");
-  /* Py_RETURN_NONE; */
-  return Py_BuildValue("i", 5);
+#endif
+
+  if(PyArg_ParseTuple(args, "O:set_callback", &temp)) {
+    if(!PyCallable_Check(temp)) {
+      PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+      return NULL;
+    }
+    Py_XINCREF(temp); /* Add a reference to new commission func */
+    Py_XDECREF(commission_fn); /* Dispose of previous commission func */
+    commission_fn = temp;
+    Py_RETURN_NONE;
+  }
+  
+  return result;
 }
 
 PyMODINIT_FUNC

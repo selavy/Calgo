@@ -6,8 +6,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-extern "C" {
-
 /**
  * macro: savestring()
  * parameters:     +x : string to be copied
@@ -67,7 +65,5 @@ typedef struct
   capital profit_n_loss;
   capital positions_value;
 } bar_evnt_t;
-
-}
 
 #endif

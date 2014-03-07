@@ -1,7 +1,7 @@
 from distutils.core import setup, Extension
 
 module1 = Extension('algoengine',
-                    sources = ['algoenginemodule.c'])
+                    sources = ['algoenginemodule.c'], include_dirs=['./include'])
 
 setup (name = 'AlgoEngine',
        version = '1.0',

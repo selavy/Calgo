@@ -14,18 +14,18 @@ typedef struct {
   date start_date;
   date end_date;
   date curr_date;
-  FILE * out_stream;
+  FILE* out_stream;
   long granularity;
 
-  queue_t * order_queue;
-  queue_t * filled_order_queue;
-  queue_t * bar_queue;
+  queue_t* order_queue;
+  queue_t* filled_order_queue;
+  queue_t* bar_queue;
 
-  portfolio_t * portfolio;
+  portfolio_t* portfolio;
 } engine_t;
 
 /* for now just one engine at a time */
-static engine_t * engine = NULL;
+static engine_t* engine = NULL;
 
 int engine_init() {
   const date now = time( NULL );
