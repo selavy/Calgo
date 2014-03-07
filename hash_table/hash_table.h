@@ -8,6 +8,8 @@
 #include "hash/hash.h" /* for hash function */
 #include "general_types.h"
 
+extern "C" {
+
 #define MAX_LOAD (0.7f)
 #define FIRST_SIZE 1009
 #define MAX_SIZE 32063
@@ -105,5 +107,7 @@ extern void * hash_contains( const hash_t * tbl, const char * key );
  * notes:
  */
 extern int hash_remove( hash_t ** tbl, const char * key );
+
+}
 
 #endif

@@ -3,6 +3,8 @@
 
 #include "general_types.h"
 
+extern "C" {
+
 typedef struct _queue_node_t
 {
   void * data;
@@ -85,5 +87,7 @@ extern void * queue_peek( const queue_t * const queue );
  * notes:
  */
 extern void queue_traverse( const queue_t * const queue, void (*fn)(const void * const) );
+
+}
 
 #endif /* ifndef _QUEUE_H_ */

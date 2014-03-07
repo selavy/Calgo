@@ -3,6 +3,23 @@
 
 #include "general_types.h"
 
+/** THRIFT **/
+/*
+#include <thrift/protocl/TBinaryProtocol.h>
+#include <thrift/transport/TSocket.h>
+#include <thrift/transport/TTransportUtils.h>
+
+using namespace std;
+using namespace apache::thrift;
+using namespace apache::thrift::protocol;
+using namespace apache::thrift::transport;
+
+using namespace shared;
+
+void init_database();
+*/
+/** END THRIFT **/
+
 typedef struct {
   capital price;
   shares volume;

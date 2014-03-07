@@ -1,6 +1,6 @@
 #include "hash_table.h"
+extern "C" {
 
-/* First hash table implementation using separate chaining with buckets of linked lists */
 static void hash_init_helper( hash_t ** tbl, size_t size );
 static void hash_shallow_delete( hash_t ** tbl );
 static hash_node_t * hash_node_insert( hash_node_t ** node, char * key, void * buf );
@@ -252,3 +252,4 @@ int hash_remove( hash_t ** tbl, const char * key ) {
   return FALSE;
 }
 
+}

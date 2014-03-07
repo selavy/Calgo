@@ -1,6 +1,22 @@
 #include "database.h"
 
+/*
+void init_database() {
+  boost::shared_ptr<TTransport> socket(new TSocket("localhost", 9090));
+  boost::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
+  boost::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
+  DatabaseClient client(protocol);
+
+  try {
+    transport->open();
+  } catch (TException &tx) {
+    printf("ERROR: %s\n", tx.what());
+  }
+}
+*/
+
 capital database_get_price( const char * symbol, const date * d ) {
+  /* client.get_price(symbol, date); */
   return 5.0f;
 }
 

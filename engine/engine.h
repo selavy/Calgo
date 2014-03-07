@@ -6,6 +6,8 @@
 #include "general_types.h"
 #include "database.h"
 
+extern "C" {
+
 #define SEC_IN_DAY 86400
 #define SEC_IN_MIN 60
 
@@ -113,4 +115,7 @@ extern date engine_get_date();
 extern long engine_get_granularity();
 
 extern portfolio_t * get_portfolio();
+
+}
+
 #endif

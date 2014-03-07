@@ -1,5 +1,7 @@
 #include "strategy.h"
 
+extern "C" {
+
 void* strategy_init() {
   int * a = malloc(sizeof(int));
   *a = 0;
@@ -13,3 +15,4 @@ void* strategy( const date * curr_date, const portfolio_t * portfolio, void * ar
   return a;
 }
 
+}

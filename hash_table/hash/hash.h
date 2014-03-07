@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include "general_types.h"
 
+extern "C" {
+
 /**
  * macro: get16bits()
  * parameters:     +d : any int with at least 16 bits
@@ -31,4 +33,7 @@
  * notes: taken from www.azillionmonkeys.com/qed/hash.html
  */
 extern uint32_t super_fast_hash( const void * data, int len );
+
+}
+
 #endif /* ifndef _HASH_H_ */
