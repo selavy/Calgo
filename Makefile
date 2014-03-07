@@ -33,6 +33,8 @@ engine.o: ./engine/engine.h ./engine/engine.c
 portfolio.o: ./portfolio/portfolio.h ./portfolio/portfolio.c
 	$(CC) $(CFLAGS) $(INC) -c ./portfolio/portfolio.c
 
+check_boost: check_boost.cpp
+	g++ -I ./boost_1_55_0 check_boost.cpp -o check_boost -L./boost_1_55_0/stage/lib/ -lboost_regex
 .PHONY: clean
 clean:
 	rm -rf *.o *.so calgo
