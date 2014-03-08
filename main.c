@@ -1,5 +1,6 @@
 #include <Python.h>
 #include <dlfcn.h>
+#include "algoenginemodule.h"
 #include "general_types.h"
 
 int main(int argc, char **argv) {
@@ -49,13 +50,19 @@ int main(int argc, char **argv) {
       start_tm = localtime( &now );
       start_tm->tm_year = 113; /* 1900 + 114 = 2014 */
       start = mktime( start_tm );
-
+      /*
       if(!engine_init()) { fprintf( stderr, "Unable to initialize engine!\n" ); exit (1); }
       engine_register_strategy( pFunc );
       engine_set_start_date( &start );
       engine_set_end_date( &now );
       engine_run( stdout, NULL );
       engine_cleanup();
+      */
+      if(!setup_engine()) { fprintf( stderr, "Unable to initialize engine!\n" ); exit (1); }
+      set_strategy( pFunc );
+      set_start_date( &start );
+      set_end_date( &now );
+      run();
     }
     else {
       if( PyErr_Occurred() ) PyErr_Print();

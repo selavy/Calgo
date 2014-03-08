@@ -1,5 +1,7 @@
 #include "algoenginemodule.h"
 
+/* #define DEBUG */
+
 static PyObject * get_price(PyObject*, PyObject*);
 static PyObject * get_volume(PyObject*, PyObject*);
 static PyObject * get_open(PyObject*, PyObject*);
@@ -68,34 +70,6 @@ get_low(PyObject *self, PyObject *args)
   Py_RETURN_NONE;
 }
 
-/*
-capital
-slippage(const order_t * order, void * data) {
-  PyObject *arglist, *result;
-  double retVal;
-
-  if(!slippage_fn) return 0;
-  arglist = Py_BuildValue("(i)(s)(i)", order->datestamp, order->symbol, order->amount);
-  result = PyObject_CallObject(slippage_fn, arglist);
-  Py_DECREF(arglist);
-  if(!PyArg_ParseTuple(result, "d", &retVal)) return 0;
-  return retVal;
-}
-
-capital
-commission(const order_t* order, void* data ) {
-  PyObject *arglist, *result;
-  double retVal;
-  
-  if(!commission_fn) return 0;
-  arglist = Py_BuildValue("(i)(s)(i)", order->datestamp, order->symbol, order->amount);
-  result = PyObject_CallObject(commission_fn, arglist);
-  Py_DECREF(arglist);
-  if(!PyArg_ParseTuple(result, "d", &retVal)) return 0;
-  return retVal;
-}
-*/
-
 static PyObject *
 set_commission_func(PyObject *self, PyObject *args)
 {
@@ -148,8 +122,14 @@ order(PyObject* self, PyObject* args)
   printf("order()\n");
 #endif
 
-  if(!PyArg_ParseTuple(args, "(s)(l)", &company_name, &amount)) return NULL;
+  if(!PyArg_ParseTuple(args, "sl", &company_name, &amount)) {
+    fprintf(stderr, "trouble parsing parameters\n");
+    return NULL;
+  }
   engine_order( company_name, amount );
+#ifdef DEBUG
+  printf("order called with %s %ld\n", company_name, amount);
+#endif
   Py_RETURN_NONE;
 }
 
@@ -157,4 +137,25 @@ PyMODINIT_FUNC
 initalgoengine(void)
 {
   Py_InitModule("algoengine", AlgoEngineMethods);
+}
+
+int setup_engine(void) {
+  return engine_init();
+}
+
+void set_strategy(PyObject * fn) {
+  engine_register_strategy( fn );
+}
+
+void set_start_date( time_t * t ) {
+  engine_set_start_date( t );
+}
+
+void set_end_date( time_t * t ) {
+  engine_set_end_date( t );
+}
+
+void run(void) {
+  engine_run( stdout, NULL );
+  engine_cleanup();
 }
