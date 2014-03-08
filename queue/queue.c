@@ -1,6 +1,6 @@
 #include "queue.h"
 
-queue_t * queue_create() {
+queue_t * queue_create(void) {
   queue_t * queue = malloc( sizeof( *queue ) );
   if( queue == NULL ) return NULL;
 

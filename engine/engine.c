@@ -3,7 +3,7 @@
 /* #define _PRINT_ */
 
 static void engine_order_helper( date date, const char * symbol, shares amount );
-static void engine_check_order_queue();
+static void engine_check_order_queue(void);
 static filled_order_t * engine_execute_order( order_t * order );
 static void engine_print_order( const void * const filled_order );
 
@@ -27,7 +27,7 @@ typedef struct {
 /* for now just one engine at a time */
 static engine_t* engine = NULL;
 
-int engine_init() {
+int engine_init(void) {
   const date now = time( NULL );
   
   engine = malloc( sizeof( *engine ) );
@@ -51,26 +51,35 @@ int engine_init() {
 }
 
 void engine_register_strategy( PyObject* fn ) {
+  if(!engine) engine_init();
+  if(engine->strategy) Py_XDECREF(engine->strategy);
   engine->strategy = fn;
 }
 
 void engine_register_commission_fn( PyObject* fn ) {
+  if(!engine) engine_init();
+  if(engine->commission) Py_XDECREF(engine->commission);
   engine->commission = fn;
 }
 
 void engine_register_slippage_fn( PyObject* fn ) {
+  if(!engine) engine_init();
+  if(engine->slippage) Py_XDECREF(engine->slippage);
   engine->slippage = fn;
 }
 
 void engine_set_start_date( const date * start_date ) {
+  if(!engine) engine_init();
   engine->start_date = *(start_date);
 }
 
 void engine_set_end_date( const date * end_date ) {
+  if(!engine) engine_init();
   engine->end_date = *(end_date);
 }
 
 void engine_set_granularity( long granularity ) {
+  if(!engine) engine_init();
   engine->granularity = granularity;
 }
 
@@ -145,7 +154,7 @@ static void engine_helper_delete_filled_order_string( void * buf ) {
   free( order->symbol );
 }
 
-void engine_cleanup() {
+void engine_cleanup(void) {
   /* clear the memory in the queues */
   queue_delete( &(engine->order_queue), engine_helper_delete_order_string );
   queue_delete( &(engine->filled_order_queue), engine_helper_delete_filled_order_string );
@@ -160,9 +169,8 @@ void engine_cleanup() {
   engine = NULL;
 }
 
-void order( const char * symbol, shares amount ) {
+void engine_order( const char * symbol, shares amount ) {
   engine_order_helper( engine->curr_date + engine->granularity, symbol, amount );
-  /* engine_order_helper( engine_get_date() + engine_get_granularity(), symbol, amount ); */
 }
 
 static void engine_order_helper( date date, const char * symbol, shares amount ) {
@@ -176,7 +184,7 @@ static void engine_order_helper( date date, const char * symbol, shares amount )
   queue_enqueue( engine->order_queue, order );
 }
 
-static void engine_check_order_queue() {
+static void engine_check_order_queue(void) {
   order_t * order;
   filled_order_t * filled_order;
 
@@ -273,18 +281,18 @@ static filled_order_t * engine_execute_order( order_t * order ) {
     return filled_order;
 }
 
-date engine_get_date() {
+date engine_get_date(void) {
   if(!engine)
     engine_init();
   return engine->curr_date;
 }
 
-date engine_get_granularity() {
+date engine_get_granularity(void) {
   if(!engine)
     engine_init();
   return engine->granularity;
 }
 
-portfolio_t * get_portfolio() {
+portfolio_t * get_portfolio(void) {
   return engine->portfolio;
 }

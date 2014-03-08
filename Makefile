@@ -13,6 +13,7 @@ PRINT_STATUS = #-D_PRINT_
 
 calgo: $(OBJS)
 	$(CC) -o calgo $(CFLAGS) $(INC) $(OBJS) $(LD) $(PYTHON)
+	python algoenginesetup.py build
 libstrategy.so: strategy.o engine.o backtest.o
 	$(CC) -o libstrategy.so -fPIC -shared -Wl,-soname,libstrategy.so strategy.o engine.o portfolio.o queue.o hash_table.o hash.o database.o backtest.o
 main.o: main.c
@@ -41,4 +42,4 @@ check_boost: check_boost.cpp
 	g++ -I ./boost_1_55_0 check_boost.cpp -o check_boost -L./boost_1_55_0/stage/lib/ -lboost_regex
 .PHONY: clean
 clean:
-	rm -rf *.o *.so calgo pymain
+	rm -rf *.o *.so calgo build/

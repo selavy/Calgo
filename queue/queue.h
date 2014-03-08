@@ -26,7 +26,7 @@ typedef struct _queue_t
  * returns:        +pointer to new queue_t struct
  * notes: must pair with call to queue_delete() to not leak memory
  */
-extern queue_t * queue_create();
+extern queue_t * queue_create(void);
 
 /**
  * function: queue_delete()

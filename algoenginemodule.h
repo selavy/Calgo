@@ -3,6 +3,7 @@
 
 #include "Python.h"
 #include "general_types.h"
+#include "engine.h"
 
 PyMODINIT_FUNC initalgoengine(void);
 

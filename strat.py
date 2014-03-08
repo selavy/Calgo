@@ -1,6 +1,6 @@
 import algoengine;
 
 def strategy(aDate):
-    print "Received ", aDate
-    algoengine.get_price();
+    #algoengine.get_price();
+    algoengine.order("AAA", 5)
     return 1;

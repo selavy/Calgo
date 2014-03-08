@@ -1,8 +1,5 @@
 #include "algoenginemodule.h"
 
-static PyObject *commission_fn = NULL;
-static PyObject *slippage_fn   = NULL;
-
 static PyObject * get_price(PyObject*, PyObject*);
 static PyObject * get_volume(PyObject*, PyObject*);
 static PyObject * get_open(PyObject*, PyObject*);
@@ -11,6 +8,7 @@ static PyObject * get_high(PyObject*, PyObject*);
 static PyObject * get_low(PyObject*, PyObject*);
 static PyObject * set_commission_func(PyObject*, PyObject*);
 static PyObject * set_slippage_func(PyObject*, PyObject*);
+static PyObject * order(PyObject*, PyObject*);
 
 static PyMethodDef AlgoEngineMethods[] = {
   {"get_price", get_price, METH_VARARGS, "Get the price of a stock at a given date"},
@@ -21,6 +19,7 @@ static PyMethodDef AlgoEngineMethods[] = {
   {"get_low", get_low, METH_VARARGS, ""},
   {"set_commission_func", set_commission_func, METH_VARARGS, ""},
   {"set_slippage_func", set_slippage_func, METH_VARARGS, ""},
+  {"order", order, METH_VARARGS, "order(company_name, amount) : Place an order for a stock"},
   {NULL, NULL, 0, NULL} /* Sentinel */
 };
 
@@ -102,7 +101,7 @@ set_commission_func(PyObject *self, PyObject *args)
 {
   PyObject *temp, *result = NULL;
 #ifdef DEBUG
-  printf("Called set_commission_func()\n");
+  printf("Called set_slippage_func()\n");
 #endif
 
   if(PyArg_ParseTuple(args, "O:set_callback", &temp)) {
@@ -111,12 +110,12 @@ set_commission_func(PyObject *self, PyObject *args)
       return NULL;
     }
     Py_XINCREF(temp); /* Add a reference to new commission func */
-    Py_XDECREF(commission_fn); /* Dispose of previous commission func */
-    commission_fn = temp;
+    engine_register_commission_fn( temp );
     Py_RETURN_NONE;
   }
   
   return result;
+
 }
 
 static PyObject *
@@ -133,12 +132,25 @@ set_slippage_func(PyObject *self, PyObject *args)
       return NULL;
     }
     Py_XINCREF(temp); /* Add a reference to new commission func */
-    Py_XDECREF(commission_fn); /* Dispose of previous commission func */
-    commission_fn = temp;
+    engine_register_slippage_fn( temp );
     Py_RETURN_NONE;
   }
   
   return result;
+}
+
+static PyObject *
+order(PyObject* self, PyObject* args)
+{
+  const char * company_name;
+  long amount;
+#ifdef DEBUG
+  printf("order()\n");
+#endif
+
+  if(!PyArg_ParseTuple(args, "(s)(l)", &company_name, &amount)) return NULL;
+  engine_order( company_name, amount );
+  Py_RETURN_NONE;
 }
 
 PyMODINIT_FUNC

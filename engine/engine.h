@@ -25,7 +25,7 @@ typedef void* (*strategy_init_fn)();
  * returns:
  * notes: must be paired with call to engine_cleanup()
  */
-extern int  engine_init();
+extern int  engine_init(void);
 
 /**
  * function: engine_register_strategy()
@@ -99,10 +99,10 @@ extern void engine_run( FILE * out, void * data );
  * returns:
  * notes: must be paired with engine_init()
  */
-extern void engine_cleanup();
+extern void engine_cleanup(void);
 
 /**
- * function: order()
+ * function: engine_order()
  * parameters:     +symbol: stock symbol to be ordered
  *                 +amount: number of shares to buy or sell
  * preconditions:
@@ -110,11 +110,11 @@ extern void engine_cleanup();
  * returns:
  * notes: amount > 0 means buy, amount < 0 means sell
  */
-extern void order( const char * symbol, shares amount );
+extern void engine_order( const char * symbol, shares amount );
 
-extern date engine_get_date();
-extern long engine_get_granularity();
+extern date engine_get_date(void);
+extern long engine_get_granularity(void);
 
-extern portfolio_t * get_portfolio();
+extern portfolio_t * get_portfolio(void);
 
 #endif
