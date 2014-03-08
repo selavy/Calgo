@@ -6,6 +6,10 @@ algo engine in C
 To compile:
 
 > make
+If make fails, you probably need to locate where python2.7-config is
+so run "whereis python2.7-config" then change the lines in the Makefile
+for PYTHON_RECOMMENDED_FLAGS and PYTHON_LNK to what you got from the
+previous command.
 
 > cd ./build
 

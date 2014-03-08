@@ -4,9 +4,7 @@
 #include "general_types.h"
 
 int main(int argc, char **argv) {
-  PyObject *pName, *pModule, *pDict, *pFunc;
-  PyObject *pArgs, *pValue;
-  int i;
+  PyObject *pName, *pModule, *pFunc, *pValue;
   struct tm * start_tm;
   date now = time( NULL ), start;
 
