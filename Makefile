@@ -1,9 +1,9 @@
 CC = gcc
 CPP = g++
 DEBUG = -g
-NOTDEBUG = -Ofast -fomit-frame-pointer
+NOTDEBUG = -fomit-frame-pointer #-Ofast
 PYTHON_RECOMMENDED_FLAGS = `/usr/bin/python2.7-config --cflags`
-CFLAGS = -pedantic -fPIC $(PYTHON_RECOMMENDED_FLAGS)
+CFLAGS = -pedantic -fPIC $(PYTHON_RECOMMENDED_FLAGS) $(NOTDEBUG)
 PERMISSIVE = -fpermissive
 INC = -I./include/ -I./portfolio/ -I./hash_table/ -I./database/ -I./queue/ -I./engine/
 OBJS = main.o hash.o hash_table.o database.o queue.o engine.o portfolio.o
