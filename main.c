@@ -25,25 +25,31 @@ int main(int argc, char **argv) {
     val = atoi( date );
     --val; /* for the tm struct, mon is the number of months SINCE janurary, so it starts at 0 */
     start_tm->tm_mon = val;
+#ifdef _PRINT_
     printf("Start date parsed: %d-", val);
+#endif
     date = strtok( NULL, "-/." );
     if(date) {
       val = atoi( date );
       start_tm->tm_mday = val;
+#ifdef _PRINT_
       printf("%d-", val);
+#endif
       date = strtok( NULL, "-/." );
       if(date) {
 	val = atoi( date );
+#ifdef _PRINT_
 	printf("%d\n", val);
+#endif
 	start_tm->tm_year = val - 1900; /* tm_year is years since 1900 */
       } else {
-	printf("Warning: could not parse a year value for the start date.\n");
+	fprintf(stderr, "Warning: could not parse a year value for the start date.\n");
       }
     } else {
-      printf("Warning: could not parse a day or year value for the start date.\n");
+      fprintf(stderr, "Warning: could not parse a day or year value for the start date.\n");
     }
   } else {
-    printf("Error: could not parse any of the start date given.\n");
+    fprintf(stderr, "Error: could not parse any of the start date given.\n");
   }
   start = mktime( start_tm );
 
@@ -54,31 +60,39 @@ int main(int argc, char **argv) {
       val = atoi( date );
       --val; /* for the tm struct, mon is the number of months SINCE janurary, so it starts at 0 */
       end_tm->tm_mon = val;
+#ifdef _PRINT_
       printf("End date parsed: %d-", val);
+#endif
       date = strtok( NULL, "-/." );
       if(date) {
 	val = atoi( date );
 	end_tm->tm_mday = val;
+#ifdef _PRINT_
 	printf("%d-", val);
+#endif
 	date = strtok( NULL, "-/." );
 	if(date) {
 	  val = atoi( date );
 	  end_tm->tm_year = val - 1900;
-	  printf("%d-", val);
+#ifdef _PRINT_
+	  printf("%d\n", val);
+#endif
 	} else {
-	  printf("Warning: could not parse a year value for the end date.\n");
+	  fprintf(stderr, "Warning: could not parse a year value for the end date.\n");
 	}
       } else {
-	printf("Warning: could not parse a day or year value for the end date.\n");
+	fprintf(stderr, "Warning: could not parse a day or year value for the end date.\n");
       }
     } else {
-      printf("Error: could not parse any of the end date given.\n");
+      fprintf(stderr, "Error: could not parse any of the end date given.\n");
     }
     end = mktime( end_tm );
   } else {
     end = now;
     end_tm = localtime(&now);
+#ifdef _PRINT_
     printf("Using %d-%d-%d for end date\n", end_tm->tm_mon + 1, end_tm->tm_mday, end_tm->tm_year + 1900 );
+#endif
   }
 
   Py_SetProgramName(argv[0]);

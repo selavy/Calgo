@@ -1,7 +1,5 @@
 #include "engine.h"
 
-#define _PRINT_
-
 static void engine_order_helper( date date, const char * symbol, shares amount );
 static void engine_check_order_queue(void);
 static filled_order_t * engine_execute_order( order_t * order );
@@ -236,8 +234,8 @@ static void engine_check_order_queue(void) {
 }
 
 static void engine_print_order( const void * const filled_order ) {
-  const filled_order_t * const o = (filled_order_t*) filled_order;
 #ifdef _PRINT_
+  const filled_order_t * const o = (filled_order_t*) filled_order;
   printf("%li shares of %s at $%.4f per share at %d\n", (long) o->amount, o->symbol, (double) o->price_per_share, (int) o->datestamp );
 #endif
 }
