@@ -16,10 +16,10 @@ PRINT_STATUS = #-D_PRINT_
 
 calgo: ./build/ main.c
 	mv ./build/lib.linux-x86_64-2.7/* .
-	ln -sf algoengine.so libalgoengine.so
-	$(CC) -o calgo $(CFLAGS) $(INC) main.c $(LD) $(PYTHON) -L. -lalgoengine
-./build/: algoenginemodule.c
-	python algoenginesetup.py build
+	ln -sf qsolve.so libqsolve.so
+	$(CC) -o calgo $(CFLAGS) $(INC) main.c $(LD) $(PYTHON) -L. -lqsolve
+./build/: qsolvemodule.c
+	python qsolvesetup.py build
 .PHONY: clean
 clean:
 	rm -rf *.o *.so calgo build/ *.pyc

@@ -1,7 +1,7 @@
-import algoengine;
+import qsolve;
 
 def strategy(aDate):
-    algoengine.order("AAA", 5)
+    qsolve.order("AAA", 5)
 
 def init():
     return;

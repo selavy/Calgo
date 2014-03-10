@@ -1,11 +1,11 @@
-#ifndef _ALGOENGINEMODULE_
-#define _ALGOENGINEMODULE_
+#ifndef _QSOLVEMODULE_
+#define _QSOLVEMODULE_
 
 #include "Python.h"
 #include "general_types.h"
 #include "engine.h"
 
-PyMODINIT_FUNC initalgoengine(void);
+PyMODINIT_FUNC initqsolve(void);
 int setup_engine(void);
 void set_strategy(PyObject*);
 void set_start_date(time_t*);

@@ -1,4 +1,4 @@
-#include "algoenginemodule.h"
+#include "qsolvemodule.h"
 
 /* #define DEBUG */
 
@@ -12,7 +12,7 @@ static PyObject * set_commission_func(PyObject*, PyObject*);
 static PyObject * set_slippage_func(PyObject*, PyObject*);
 static PyObject * order(PyObject*, PyObject*);
 
-static PyMethodDef AlgoEngineMethods[] = {
+static PyMethodDef QSolveMethods[] = {
   {"get_price", get_price, METH_VARARGS, "Get the price of a stock at a given date"},
   {"get_volume", get_volume, METH_VARARGS, "Get the volume of a stock on a given day"},
   {"get_open", get_open, METH_VARARGS, ""},
@@ -134,9 +134,9 @@ order(PyObject* self, PyObject* args)
 }
 
 PyMODINIT_FUNC
-initalgoengine(void)
+initqsolve(void)
 {
-  Py_InitModule("algoengine", AlgoEngineMethods);
+  Py_InitModule("qsolve", QSolveMethods);
 }
 
 int setup_engine(void) {

@@ -1,6 +1,6 @@
 #include <Python.h>
 #include <dlfcn.h>
-#include "algoenginemodule.h"
+#include "qsolvemodule.h"
 #include "general_types.h"
 
 int main(int argc, char **argv) {
