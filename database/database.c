@@ -21,7 +21,7 @@ capital database_get_price( const char * symbol, const date * d ) {
 }
 
 shares database_get_volume( const char * symbol, const date * d ) {
-  return 10000;
+  return 100000;
 }
 
 capital database_get_open( const char * symbol, const date * d ) {

@@ -46,6 +46,8 @@ extern void hash_init( hash_t ** tbl );
  * postconditions: +tbl is NULL
  * returns:
  * notes: must be called to clean up heap allocated memory
+ *        currently is leaking position_t->symbol
+ *        TODO: add function to with which to delete hash_node_t->data
  */
 extern void hash_delete( hash_t ** tbl );
 
@@ -105,5 +107,7 @@ extern void * hash_contains( const hash_t * tbl, const char * key );
  * notes:
  */
 extern int hash_remove( hash_t ** tbl, const char * key );
+
+extern void hash_traverse( hash_t * tbl, void (fn)(const void *) );
 
 #endif

@@ -151,7 +151,6 @@ void hash_insert( hash_t ** tbl, char * key, void * buf ) {
   const uint32_t loc = super_fast_hash( key, strlen( key ) ) % (*tbl)->tbl_sz;
   double load;
 
-  /*printf("loc = %"PRIx32"\n", loc); */
   /* init table if it hasn't been yet */
   if( *tbl == NULL ) hash_init( tbl );
 
@@ -173,7 +172,6 @@ void hash_insert( hash_t ** tbl, char * key, void * buf ) {
 	  int i;
 	  hash_t * new_tbl;
 
-	  /* printf("needs rebalanced\n"); */
 	  /* TODO remove this function and do it by hand so don't loop through array so many times */
 	  hash_init_helper( &new_tbl, next_size );
 
@@ -232,6 +230,8 @@ int hash_remove( hash_t ** tbl, const char * key ) {
       free( node->key );
       free( node->data );
       free( node );
+      (*tbl)->tbl_p[loc] = NULL;
+      --((*tbl)->count);
       return TRUE;
     }
 
@@ -249,4 +249,14 @@ int hash_remove( hash_t ** tbl, const char * key ) {
     }
   
   return FALSE;
+}
+
+void hash_traverse( hash_t * tbl, void (fn)(const void *) ) {
+  int i;
+  for( i = 0; i < tbl->tbl_sz; ++i ) {
+    if( tbl->tbl_p[i] ) {
+      fn( tbl->tbl_p[i]->data );
+    }
+  }
+
 }

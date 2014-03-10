@@ -155,7 +155,7 @@ void set_end_date( time_t * t ) {
   engine_set_end_date( t );
 }
 
-void run(void) {
-  engine_run( stdout, NULL );
+void run(FILE * out) {
+  engine_run( out, NULL );
   engine_cleanup();
 }
