@@ -289,7 +289,7 @@ static void printer( const void * data ) {
     }
   }
 
-  fprintf(engine->out_stream, "%ld, %f\n", (long int) order->datestamp, total_value);
+  fprintf(engine->out_stream, "%ld, %.2f\n", (long int) order->datestamp, total_value);
 }
 
 static void engine_output_csv() {

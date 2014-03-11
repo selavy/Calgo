@@ -5,7 +5,7 @@ buy = True;
 def strategy(aDate):
     global buy
     if buy:
-        qsolve.order("AAA", 5)
+        qsolve.order("AAA", 10)
         buy = buy ^ True
     else:
         qsolve.order("AAA", -1)

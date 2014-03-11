@@ -14,12 +14,12 @@ PYTHON = $(PYTHON_LNK)
 SHARED = -shared -Wl,-soname,
 PRINT_STATUS = #-D_PRINT_
 
-calgo: ./build/ main.c
+qsolve: ./build/ main.c
 	mv ./build/lib.linux-x86_64-2.7/* .
 	ln -sf qsolve.so libqsolve.so
-	$(CC) -o calgo $(CFLAGS) $(INC) main.c $(LD) $(PYTHON) -L. -lqsolve
+	$(CC) -o qsolve $(CFLAGS) $(INC) main.c $(LD) $(PYTHON) -L. -lqsolve
 ./build/: qsolvemodule.c
 	python qsolvesetup.py build
 .PHONY: clean
 clean:
-	rm -rf *.o *.so calgo build/ *.pyc
+	rm -rf *.o *.so qsolve build/ *.pyc
