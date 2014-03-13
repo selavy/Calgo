@@ -1,24 +1,8 @@
 #ifndef _DATABASE_H_
 #define _DATABASE_H_
 
+#include "Python.h"
 #include "general_types.h"
-
-/** THRIFT **/
-/*
-#include <thrift/protocl/TBinaryProtocol.h>
-#include <thrift/transport/TSocket.h>
-#include <thrift/transport/TTransportUtils.h>
-
-using namespace std;
-using namespace apache::thrift;
-using namespace apache::thrift::protocol;
-using namespace apache::thrift::transport;
-
-using namespace shared;
-
-void init_database();
-*/
-/** END THRIFT **/
 
 typedef struct {
   capital price;
@@ -29,6 +13,7 @@ typedef struct {
   capital low;
 } db_rslt_t;
 
+extern int     database_init( PyObject * module );
 extern capital database_get_price( const char * symbol, const date * d );
 extern shares  database_get_volume( const char * symbol, const date * d );
 extern capital database_get_open( const char * symbol, const date * d );

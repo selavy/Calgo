@@ -107,9 +107,6 @@ void engine_run( FILE * out, void * data ) {
   engine->curr_date = engine->start_date;
   while( engine->curr_date < engine->end_date )
     {
-      /*
-      data = engine->strategy( &(engine->curr_date), engine->portfolio, data );
-      */
       arglist = PyTuple_New(1);
       if(!arglist) { fprintf(stderr, "error making argument list\n"); return; }
       pValue = PyInt_FromLong(engine->curr_date);

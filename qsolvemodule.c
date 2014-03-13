@@ -1,7 +1,5 @@
 #include "qsolvemodule.h"
 
-/* #define DEBUG */
-
 static PyObject * get_price(PyObject*, PyObject*);
 static PyObject * get_volume(PyObject*, PyObject*);
 static PyObject * get_open(PyObject*, PyObject*);

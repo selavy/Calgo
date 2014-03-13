@@ -2,9 +2,10 @@
 #include <dlfcn.h>
 #include "qsolvemodule.h"
 #include "general_types.h"
+#include "database.h"
 
 int main(int argc, char **argv) {
-  PyObject *pName, *pModule, *pFunc, *pValue;
+  PyObject *pName, *pModule, *pFunc, *pValue, *DBModule;
   struct tm *start_tm, *end_tm;
   date now = time( NULL ), start, end;
   FILE * pFile;
@@ -99,6 +100,15 @@ int main(int argc, char **argv) {
   Py_Initialize();
   PySys_SetArgv(argc, argv);
 
+  pName = PyString_FromString("QSolveDB");
+  DBModule = PyImport_Import( pName );
+  if( -1 == database_init( DBModule ) ) {
+    fprintf(stderr, "Error: unable to load qsolve database functions\n");
+    Py_Finalize();
+    exit (1);
+  }
+  Py_DECREF( pName );
+
   pName = PyString_FromString(argv[1]);
   if(!pName) {
     perror("pName");
@@ -136,11 +146,6 @@ int main(int argc, char **argv) {
       if( PyErr_Occurred() ) PyErr_Print();
       fprintf(stderr, "Cannot find strategy function!\n");
     }
-      /*
-	handled by engine
-	Py_XDECREF(pFunc);
-	Py_DECREF(pModule);
-      */
   }
   else {
     PyErr_Print();
