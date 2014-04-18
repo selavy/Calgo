@@ -1,8 +1,8 @@
 cppqsolve
 =========
-----------------------------------------------------------------------------------------
+
 BUILD
------------------------------------------------------------------------------------------
+------
 Building uses cmake.  If you don't have a copy, get it from http://www.cmake.org/
 You can check what version (if any) is currently installed with "cmake --version".
 
@@ -23,9 +23,8 @@ To build (from the root directory):
 
 If you have cmake errors then you probably don't have the boost libraries installed.
 
-------------------------------------------------------------------------------------------
 USAGE
-------------------------------------------------------------------------------------------
+------
 To see the available options: "./qsolve --help"
 
 Note: Anything between square brackets "[]" will name a "type" of input, for example, a file,
@@ -33,9 +32,10 @@ a date, an amount of capital, etc.  So if an argument says "--output [FILE]" it 
 replace "[FILE]" with the name of file.
 
 The minimum arguments you need to give are a start date and a python script to run:
-"./qsolve -start [DATE] [FILE]"
+    $ ./qsolve -start [DATE] [FILE]
 
-e.g. "./qsolve --start 2014/01/02 PyStrategy.py"
+For example:
+    $ ./qsolve --start 2014/01/02 PyStrategy.py
 
 If no end date is given, then it will run from start date until the current date.
 
@@ -56,10 +56,10 @@ to order 50 shares to AAPL.
 
 A really simple example script is:
 
-# PyStrategy.py
-def init(context):
-    context.aapl = 'AAPL'
-def strategy(context):
-    context.order(context.aapl, 50);
+  # PyStrategy.py
+  def init(context):
+        context.aapl = 'AAPL'
+  def strategy(context):
+        context.order(context.aapl, 50)
 
     
