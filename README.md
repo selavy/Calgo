@@ -58,13 +58,7 @@ A really simple example script is:
 
 # PyStrategy.py
 def init(context):
-# you can provide an initialize function, but you don't have to
-# init(context) will be called once before the loop that
-# calls strategy for each time period.	   
-    # initialize context here  
-    # add some state to context that will be passed into my strategy function
     context.aapl = 'AAPL'
-
 def strategy(context):
     context.order(context.aapl, 50);
 
