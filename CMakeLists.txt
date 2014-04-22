@@ -54,7 +54,9 @@ INCLUDE_DIRECTORIES("${qsolve_SOURCE_DIR}")
 INCLUDE_DIRECTORIES("${qsolve_BINARY_DIR}")
 
 ADD_LIBRARY(Context Context.cpp OrderFactory.cpp OrderEngine.cpp Portfolio.cpp)
+TARGET_LINK_LIBRARIES(Context ${Boost_LIBRARIES})
 ADD_LIBRARY(MockDatabase MockDatabase.cpp)
+TARGET_LINK_LIBRARIES(MockDatabase ${Boost_LIBRARIES})
 
 ADD_EXECUTABLE(qsolve main.cpp)
 TARGET_LINK_LIBRARIES(qsolve Context MockDatabase)

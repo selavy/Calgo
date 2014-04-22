@@ -1,6 +1,6 @@
 #include "MockDatabase.hpp"
 
-MockDatabase::MockDatabase() {
+MockDatabase::MockDatabase( boost::python::object& pythonNamespace ) : pythonNamespace_( pythonNamespace ) {
   using namespace std;
   using namespace boost::gregorian;
 
@@ -132,12 +132,13 @@ stock_t MockDatabase::getData( const datetime& date, const std::string& symbol )
     return std::move( emptyStock );
   }
 
-  // std::cout << "Returning data for " << symbol 
-  // << " on: " << boost::gregorian::to_iso_extended_string( date ) 
-  // << ": " << found_date->second.open << ", " 
-  // << found_date->second.close << ", "
-  // << found_date->second.volume << ", "
-  // << found_date->second.openVolume
-  // << std::endl;
   return found_date->second;
+}
+
+boost::python::object MockDatabase::getDataPy( const std::string& symbol, const std::string& startDate, const std::string& endDate ) const {
+  boost::format fmtr( R"(%1%.getData('%2%','%3%','%4%')" );
+  fmtr % "PyDB" % symbol % startDate % endDate;
+  std::string execString = fmtr.str();
+  boost::python::object retVal = exec( execString.c_str(), pythonNamespace_ );
+  return std::move( retVal );
 }

@@ -1,6 +1,7 @@
 #ifndef _CONTEXT_HPP_
 #define _CONTEXT_HPP_
 
+#include <boost/python.hpp>
 #include <memory>
 #include <unordered_map>
 #include <string>
@@ -26,6 +27,8 @@ struct Context {
   void printHistory( std::ofstream& os ) const;
   void processOrderQueue( const datetime& date );
   stock_t getData( const datetime& date, const std::string& symbol ) const;
+  boost::python::object getDataPy( const std::string& symbol, const std::string& startDate, const std::string& endDate ) const;
+
   //
   // balance_ has to be public so that it can be
   // exposed as an attribute to the Python

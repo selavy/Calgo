@@ -72,3 +72,14 @@ stock_t Context::getData( const datetime& date, const std::string& symbol ) cons
 
   return database_->getData( date, symbol );
 }
+
+boost::python::object Context::getDataPy( const std::string& symbol, const std::string& startDate, const std::string& endDate ) const {
+  if( database_ == NULL ) {
+    //
+    // return None if database not set
+    //
+    return std::move( boost::python::object() );
+  }
+
+  return std::move( database_->getDataPy( symbol, startDate, endDate ) );
+}

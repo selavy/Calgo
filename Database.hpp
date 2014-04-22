@@ -1,7 +1,8 @@
 #ifndef _DATABASE_HPP_
 #define _DATABASE_HPP_
 
-#include "boost/noncopyable.hpp"
+#include <boost/python.hpp>
+#include <boost/noncopyable.hpp>
 #include "QTypes.hpp"
 #include <string>
 
@@ -14,6 +15,7 @@ class Database :
 public:
   virtual ~Database() {}
   virtual stock_t getData( const datetime& date, const std::string& symbol ) const = 0;
+  virtual boost::python::object getDataPy( const std::string& symbol, const std::string& startDate, const std::string& endDate ) const = 0;
 };
 
 #endif

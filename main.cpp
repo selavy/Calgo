@@ -234,14 +234,32 @@ int main( int argc, char **argv ) {
 			  class_<Context>( "Context" )
 			  .def( "order", &Context::order )
 			  .def( "__getitem__", &Context::operator[] )
-			  .def( "get_data", &Context::getData )
+			  .def( "get_data", &Context::getDataPy )
 			  .def_readonly( "balance", &Context::balance_ )
 			  .def_readonly( "date", &Context::date_ )
 			  )();
       //
       // Create the database that the python object will use
       //
-      MockDatabase * database = new MockDatabase;
+
+      //
+      // TODO: Allow specification of database file?
+      //
+      object PyDatabase;
+      dict PyDatabase_Namespace;
+      try {
+	PyDatabase = import( "PyDatabase" );
+	PyDatabase_Namespace( PyDatabase.attr( "__dict__" ) );
+	exec( "PyDB = new DBWrapper()", PyDatabase_Namespace );
+      } catch( ... ) {
+	if( PyErr_Occurred() ) {
+	  PyErr_Print();
+	} else {
+	  cerr << "Error with setting up Python database" << endl;
+	}
+      }
+
+      MockDatabase * database = new MockDatabase( PyDatabase_Namespace );
       OrderFactory * orderFactory = new OrderFactory( *database );
       OrderEngine * orderEngine = new OrderEngine( *orderFactory );
 
@@ -281,8 +299,11 @@ int main( int argc, char **argv ) {
 	context.processOrderQueue( date );
       }
 
-      context.printTransactionList( ofs );
-      ofs << "\n\n\n\n\n" << endl;
+      //
+      // TODO: Add another argument to print out the Transaction List to a different file
+      //
+      //context.printTransactionList( ofs );
+      //ofs << "\n\n\n\n\n" << endl;
       context.printHistory( ofs );
 
       free( database );
@@ -292,7 +313,20 @@ int main( int argc, char **argv ) {
       if( PyErr_Occurred() ) {
 	PyErr_Print();
       } else {
-	cerr << "Caught unknown exception" << endl;
+	//
+	// This seems to be the only way to figure out
+	// what the exception is...
+	//
+	std::exception_ptr eptr = std::current_exception();
+	try {
+	  if( eptr ) {
+	    rethrow_exception( eptr );
+	  }
+	} catch( const exception& e ) {
+	  cout << "Caught exception \"" << e.what() << "\"\n";
+	} catch( ... ) {
+	  cout << "Unknown exception caught" << endl;
+	}
       }
     }
 

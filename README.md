@@ -1,17 +1,16 @@
-cppqsolve
-=========
-
+AlgoEngine
+==========
+----------------------------------------------------------------------------------------
 BUILD
-=====
+-----------------------------------------------------------------------------------------
 Building uses cmake.  If you don't have a copy, get it from http://www.cmake.org/
 You can check what version (if any) is currently installed with "cmake --version".
 
-Dependencies
--------------
-*CMake
-*Boost.Python
-*Boost.DateTime
-*Boost.ProgramOptions
+Dependencies:
+	+CMake
+	+Boost.Python
+	+Boost.DateTime
+	+Boost.ProgramOptions
 
 (It appeared that there was a bug in Boost.Python version 1.53.0, so you might
 want to get a different version)
@@ -24,19 +23,23 @@ To build (from the root directory):
 
 If you have cmake errors then you probably don't have the boost libraries installed.
 
+------------------------------------------------------------------------------------------
 USAGE
-=====
+------------------------------------------------------------------------------------------
 To see the available options: "./qsolve --help"
 
 Note: Anything between square brackets "[]" will name a "type" of input, for example, a file,
 a date, an amount of capital, etc.  So if an argument says "--output [FILE]" it means
-replace "[FILE]" with the name of file.
+replace "[FILE]" with the name of a file.
+
+N.B. The python interpreter is initialized with its home directory set to the same directory
+as where qsolve is being run from, so you either need to have the python script in the same
+directory as the main executable, or you need to give a full path to the script.
 
 The minimum arguments you need to give are a start date and a python script to run:
-./qsolve -start [DATE] [FILE]
+"./qsolve -start [DATE] [FILE]"
 
-For example:
-./qsolve --start 2014/01/02 PyStrategy.py
+e.g. "./qsolve --start 2014/01/02 PyStrategy.py"
 
 If no end date is given, then it will run from start date until the current date.
 
@@ -58,9 +61,18 @@ to order 50 shares to AAPL.
 A really simple example script is:
 
 # PyStrategy.py
+
+# you can provide an initialize function, but you don't have to
+# init(context) will be called once before the loop that
+# calls strategy for each time period.
 def init(context):
+    # initialize context here
+    # add some state to context that will be passed into my strategy function
     context.aapl = 'AAPL'
+
 def strategy(context):
-    context.order(context.aapl, 50)
+    context.order(context.aapl, 50);
+
+#end PyStrategy.py
 
     
